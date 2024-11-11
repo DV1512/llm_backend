@@ -29,7 +29,7 @@ struct AppState {
 impl AppState {
     async fn new() -> Self {
         let model = Llama::builder()
-            .with_source(LlamaSource::llama_3_2_3b_chat())
+            .with_source(LlamaSource::llama_3_1_8b_chat())
             .build()
             .await
             .unwrap();
