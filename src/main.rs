@@ -1,12 +1,12 @@
-use actix_web::web::Bytes;
-use actix_web::{middleware::Logger, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{middleware::Logger, post, web, App, HttpServer, Responder};
+use actix_web_lab::sse;
 use env_logger::Env;
 use kalosm::language::{Chat, Llama, LlamaSource};
 use serde::{Deserialize, Serialize};
+use std::convert::Infallible;
 use std::sync::Mutex;
 use tokio_stream::StreamExt;
-
-type StreamItem = Result<Bytes, actix_web::Error>;
+use ulid::Ulid;
 
 #[derive(Serialize, Deserialize)]
 struct ChatRequest {
@@ -19,7 +19,12 @@ async fn stream_endpoint(
     state: web::Data<AppState>,
 ) -> impl Responder {
     let stream = state.chat.lock().unwrap().add_message(request_data.prompt);
-    HttpResponse::Ok().streaming(stream.map(|item| -> StreamItem { Ok(Bytes::from(item)) }))
+    let ulid = Ulid::new().to_string();
+    let sse_stream = stream.map(move |item| -> Result<sse::Event, _> {
+        let data = sse::Data::new(item).id(ulid.clone());
+        Ok::<_, Infallible>(sse::Event::Data(data))
+    });
+    sse::Sse::from_stream(sse_stream)
 }
 
 struct AppState {
