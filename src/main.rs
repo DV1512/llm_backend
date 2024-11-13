@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use std::convert::Infallible;
 use std::sync::Mutex;
 use tokio_stream::StreamExt;
-use ulid::Ulid;
 
 #[derive(Serialize, Deserialize)]
 struct ChatRequest {
@@ -19,9 +18,8 @@ async fn stream_endpoint(
     state: web::Data<AppState>,
 ) -> impl Responder {
     let stream = state.chat.lock().unwrap().add_message(request_data.prompt);
-    let ulid = Ulid::new().to_string();
     let sse_stream = stream.map(move |item| -> Result<sse::Event, _> {
-        let data = sse::Data::new(item).id(ulid.clone());
+        let data = sse::Data::new(item);
         Ok::<_, Infallible>(sse::Event::Data(data))
     });
     sse::Sse::from_stream(sse_stream)
