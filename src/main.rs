@@ -1,13 +1,13 @@
+use crate::state::AppState;
 use actix_web::{middleware::Logger, post, web, App, HttpServer, Responder};
 use actix_web_lab::sse;
 use env_logger::Env;
-use kalosm::language::{Chat, Llama, LlamaSource};
 use serde::{Deserialize, Serialize};
 use std::convert::Infallible;
-use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
-use tokio_stream::StreamExt;
 use ulid::Ulid;
+
+mod state;
 
 #[derive(Serialize, Deserialize)]
 struct ChatRequest {
@@ -65,23 +65,6 @@ impl ChatMessageChunk {
             timestamp,
             role,
             contents,
-        }
-    }
-}
-
-struct AppState {
-    chat: Mutex<Chat>,
-}
-
-impl AppState {
-    async fn new() -> Self {
-        let model = Llama::builder()
-            .with_source(LlamaSource::llama_3_1_8b_chat())
-            .build()
-            .await
-            .unwrap();
-        Self {
-            chat: Mutex::new(Chat::builder(model).build()),
         }
     }
 }
