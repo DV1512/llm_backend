@@ -1,5 +1,6 @@
 use crate::chat::chat_service;
 use crate::state::AppState;
+use actix_cors::Cors;
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use env_logger::Env;
@@ -15,6 +16,7 @@ async fn main() -> Result<(), std::io::Error> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(Cors::permissive())
             .wrap(Logger::default())
             .app_data(state.clone())
             .service(chat_service())
