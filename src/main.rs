@@ -24,7 +24,7 @@ async fn main() -> Result<(), ServerError> {
             .app_data(state.clone())
             .service(chat_service())
     })
-    .bind("[::1]:8000")?
+    .bind("0.0.0.0:8000")?
     .run()
     .await?;
 
