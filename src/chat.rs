@@ -8,11 +8,12 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tokio_stream::StreamExt;
 use ulid::Ulid;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct ChatRequest {
     prompt: String,
 }
 
+#[tracing::instrument(skip(state))]
 #[post("/completions")]
 async fn completions(
     web::Json(request_data): web::Json<ChatRequest>,
@@ -35,6 +36,7 @@ async fn completions(
     sse::Sse::from_stream(sse_stream)
 }
 
+#[tracing::instrument]
 pub fn chat_service() -> impl HttpServiceFactory {
     web::scope("/chat").service(completions)
 }

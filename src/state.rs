@@ -6,6 +6,7 @@ pub struct AppState {
 }
 
 impl AppState {
+    #[tracing::instrument]
     pub async fn new() -> Self {
         let model = Llama::builder()
             .with_source(LlamaSource::llama_3_1_8b_chat())
