@@ -1,42 +1,6 @@
 [
     {
-        "name": "APT28",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for APT28?"
-    },
-    {
-        "name": "APT29",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for APT29?"
-    },
-    {
-        "name": "Sandworm Team",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Sandworm Team?"
-    },
-    {
-        "name": "Turla",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Turla?"
-    },
-    {
-        "name": "Evil Corp",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Evil Corp?"
-    },
-    {
-        "name": "Sandworm",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Sandworm?"
-    },
-    {
-        "name": "Gamaredon Group",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Gamaredon Group?"
-    },
-    {
-        "name": "Zebrocy",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Zebrocy?"
-    },
-    {
-        "name": "Armageddon",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Armageddon?"
-    },
-    {
-        "name": "Berserk Bear",
-        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: What are the associated names for Berserk Bear?"
+        "name": "example",
+        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: {template_question} for {name}?"
     }
 ]

@@ -18,36 +18,43 @@ struct Prompt {
     name: String,
     prompt_template: String,
 }
-
 #[post("/templated")]
 async fn templated(
     web::Json(request_data): web::Json<Prompt>,
     state: web::Data<AppState>,
-) -> impl Responder {
+) -> Result<impl Responder, actix_web::Error> {
     let prompt_data = state
         .prompts
         .iter()
-        .find(|p| p.name == request_data.name)
-        .expect("Prompt not found for the given name");
+        .find(|p| p.name == "example")
+        .ok_or_else(|| {
+            actix_web::error::ErrorNotFound(format!("Prompt not found for {}", request_data.name))
+        })?;
 
     let group = state
         .threat_groups
         .iter()
         .find(|group| group.name == request_data.name)
-        .expect("Group not found in the state");
+        .ok_or_else(|| {
+            actix_web::error::ErrorNotFound(format!(
+                "Threat group {} not found.",
+                request_data.name
+            ))
+        })?;
 
     let prompt = prompt_data
         .prompt_template
         .replace("{name}", &group.name)
         .replace("{description}", &group.description)
-        .replace("{associated_names}", &group.associated_names.join(", "));
+        .replace("{associated_names}", &group.associated_names.join(", "))
+        .replace("{template_question}", &request_data.prompt_template);
 
     let stream = state.chat.lock().unwrap().add_message(prompt);
 
     let ulid = Ulid::new();
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards?")
+        .map_err(|_| actix_web::error::ErrorInternalServerError("time went backwards?"))?
         .as_secs();
 
     let sse_stream = stream.map(move |item| -> Result<sse::Event, Infallible> {
@@ -57,7 +64,7 @@ async fn templated(
         Ok(sse::Event::Data(data))
     });
 
-    sse::Sse::from_stream(sse_stream)
+    Ok(sse::Sse::from_stream(sse_stream))
 }
 
 #[post("/completions")]

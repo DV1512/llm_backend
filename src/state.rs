@@ -1,5 +1,5 @@
 use kalosm::language::{Chat, Llama, LlamaSource};
-use serde::{de, Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::sync::Mutex;
 
@@ -24,7 +24,7 @@ pub struct AppState {
     pub prompts: Vec<Prompt>,
 }
 
-async fn load_prompts() -> Vec<Prompt> {
+fn load_prompts() -> Vec<Prompt> {
     let file_data = fs::read_to_string("prompt.json").expect("unable to read prompt.json");
     serde_json::from_str(&file_data).expect("unable to parse prompt.json")
 }
@@ -41,7 +41,7 @@ impl AppState {
         let threat_groups: Vec<ThreatActor> =
             serde_json::from_str(&json_data).expect("JSON failed");
 
-        let prompts = load_prompts().await;
+        let prompts = load_prompts();
 
         Self {
             chat: Mutex::new(Chat::builder(model).build()),
