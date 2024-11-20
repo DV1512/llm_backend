@@ -4,14 +4,13 @@ use actix_web::{post, web, Responder};
 use actix_web_lab::sse;
 use serde::{Deserialize, Serialize};
 use std::convert::Infallible;
-use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio_stream::StreamExt;
 use ulid::Ulid;
 
 #[derive(Serialize, Deserialize)]
 struct ChatRequest {
-    prompt: String, // The custom prompt the user provides
+    prompt: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -20,19 +19,13 @@ struct Prompt {
     prompt_template: String,
 }
 
-fn load_prompts() -> Vec<Prompt> {
-    let file_data = fs::read_to_string("prompt.json").expect("unable to read prompt.json");
-    serde_json::from_str(&file_data).expect("unable to parse prompt.json")
-}
-
 #[post("/templated")]
 async fn templated(
     web::Json(request_data): web::Json<Prompt>,
     state: web::Data<AppState>,
 ) -> impl Responder {
-    let prompts = load_prompts();
-
-    let prompt_data = prompts
+    let prompt_data = state
+        .prompts
         .iter()
         .find(|p| p.name == request_data.name)
         .expect("Prompt not found for the given name");
