@@ -2807,6 +2807,7 @@ dependencies = [
  "kalosm",
  "serde",
  "serde_json",
+ "tokio",
  "tokio-stream",
  "ulid",
 ]
