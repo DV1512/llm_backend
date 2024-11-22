@@ -1,0 +1,6 @@
+[
+    {
+        "name": "example",
+        "prompt_template": "Here is information about the threat group :\nName: {name}\nDescription: {description}\nAssociated Names: {associated_names}\n\nQuestion: {template_question} for {name}?"
+    }
+]

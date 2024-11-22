@@ -1,0 +1,14 @@
+[
+    "Threat Group",
+    {
+        "Name": "{name}",
+        "Description": "{description}",
+        "Likelyhood": "{Estimation}"
+    },
+    "Ip Addresses",
+    {
+        "IpAddress": "{IpAddress}",
+        "Description": "{description}",
+        "ThreatGroup": "{ThreatGroup}"
+    }
+]
