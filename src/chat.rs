@@ -11,6 +11,8 @@ use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio_stream::StreamExt;
 use ulid::Ulid;
+use crate::structured::structured;
+
 #[derive(Serialize, Deserialize)]
 struct ChatRequest {
     prompt: String,
@@ -177,7 +179,7 @@ async fn completions(
 }
 
 pub fn chat_service() -> impl HttpServiceFactory {
-    web::scope("/chat").service(completions).service(templated)
+    web::scope("/chat").service(completions).service(templated).service(structured)
 }
 
 #[derive(Serialize)]

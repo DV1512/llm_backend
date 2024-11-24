@@ -7,6 +7,8 @@ use env_logger::Env;
 
 mod chat;
 mod state;
+mod actor;
+mod structured;
 
 #[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
