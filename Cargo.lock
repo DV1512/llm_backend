@@ -396,15 +396,16 @@ checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
 name = "arroy"
-version = "0.3.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73897699bf04bac935c0b120990d2a511e91e563e0f9769f9c8bb983d98dfbc9"
+checksum = "dfc5f272f38fa063bbff0a7ab5219404e221493de005e2b4078c62d626ef567e"
 dependencies = [
  "bytemuck",
  "byteorder",
  "heed",
  "log",
  "memmap2",
+ "nohash",
  "ordered-float",
  "rand 0.8.5",
  "rayon",
@@ -528,7 +529,7 @@ dependencies = [
  "bitflags 2.6.0",
  "cexpr",
  "clang-sys",
- "itertools 0.10.5",
+ "itertools 0.13.0",
  "proc-macro2",
  "quote",
  "regex",
@@ -2154,7 +2155,7 @@ version = "0.1.0"
 source = "git+https://github.com/s3bk/glyphmatcher#7bd5d40aaa8893fa4f2e07c758fa34127e176c8c"
 dependencies = [
  "font",
- "istring 0.4.0",
+ "istring 0.4.1",
  "itertools 0.13.0",
  "pathfinder_content",
  "pathfinder_geometry",
@@ -2781,8 +2782,8 @@ dependencies = [
 
 [[package]]
 name = "istring"
-version = "0.4.0"
-source = "git+https://github.com/s3bk/istring#b7ceabb714f0b6ce804fe36c8e20caa6ff3d0853"
+version = "0.4.1"
+source = "git+https://github.com/s3bk/istring#ac7b821c94cf5a1295b4712e60b65419e4c05352"
 dependencies = [
  "serde",
 ]
@@ -2881,14 +2882,17 @@ dependencies = [
 [[package]]
 name = "kalosm"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
+ "arroy",
  "async-trait",
+ "candle-core",
  "comfy-table",
  "ego-tree",
  "futures-util",
  "hdrhistogram",
+ "heed",
  "image 0.24.9",
  "kalosm-common",
  "kalosm-language",
@@ -2900,6 +2904,7 @@ dependencies = [
  "once_cell",
  "rand 0.8.5",
  "serde",
+ "thiserror 2.0.3",
  "tokio",
  "tracing",
 ]
@@ -2907,7 +2912,7 @@ dependencies = [
 [[package]]
 name = "kalosm-common"
 version = "0.3.3"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "candle-core",
@@ -2926,7 +2931,7 @@ dependencies = [
 [[package]]
 name = "kalosm-language"
 version = "0.3.3"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "arroy",
@@ -2959,6 +2964,7 @@ dependencies = [
  "rbert",
  "readability",
  "reqwest",
+ "roaring",
  "rphi",
  "rss",
  "rustc-hash 1.1.0",
@@ -2969,6 +2975,7 @@ dependencies = [
  "srx",
  "tempfile",
  "texting_robots",
+ "thiserror 2.0.3",
  "tokenizers",
  "tokio",
  "tokio-util",
@@ -2980,7 +2987,7 @@ dependencies = [
 [[package]]
 name = "kalosm-language-model"
 version = "0.3.3"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3007,7 +3014,7 @@ dependencies = [
 [[package]]
 name = "kalosm-llama"
 version = "0.3.3"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3030,7 +3037,7 @@ dependencies = [
 [[package]]
 name = "kalosm-ocr"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "candle-core",
@@ -3049,7 +3056,7 @@ dependencies = [
 [[package]]
 name = "kalosm-parse-macro"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3059,7 +3066,7 @@ dependencies = [
 [[package]]
 name = "kalosm-sample"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "kalosm-parse-macro",
@@ -3069,7 +3076,7 @@ dependencies = [
 [[package]]
 name = "kalosm-sound"
 version = "0.3.4"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3100,7 +3107,7 @@ dependencies = [
 [[package]]
 name = "kalosm-streams"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "futures-util",
  "image 0.24.9",
@@ -3111,7 +3118,7 @@ dependencies = [
 [[package]]
 name = "kalosm-vision"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "image 0.24.9",
  "kalosm-ocr",
@@ -3198,7 +3205,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if 1.0.0",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -3645,6 +3652,12 @@ dependencies = [
  "once_cell",
  "rustfft",
 ]
+
+[[package]]
+name = "nohash"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a0f889fb66f7acdf83442c35775764b51fed3c606ab9cee51500dbde2cf528ca"
 
 [[package]]
 name = "nom"
@@ -4107,7 +4120,7 @@ dependencies = [
 [[package]]
 name = "pdf"
 version = "0.9.0"
-source = "git+https://github.com/pdf-rs/pdf#bfe1fbabcabcebdb58b5209d11158c79b7ed0049"
+source = "git+https://github.com/pdf-rs/pdf#b69e0753c9d6adff567b911494309798e0954e6a"
 dependencies = [
  "aes",
  "bitflags 2.6.0",
@@ -4135,7 +4148,7 @@ dependencies = [
 [[package]]
 name = "pdf_derive"
 version = "0.2.0"
-source = "git+https://github.com/pdf-rs/pdf#bfe1fbabcabcebdb58b5209d11158c79b7ed0049"
+source = "git+https://github.com/pdf-rs/pdf#b69e0753c9d6adff567b911494309798e0954e6a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4170,7 +4183,7 @@ dependencies = [
  "glyphmatcher",
  "image 0.24.9",
  "instant",
- "istring 0.4.0",
+ "istring 0.4.1",
  "itertools 0.13.0",
  "log",
  "once_cell",
@@ -4659,7 +4672,7 @@ dependencies = [
 [[package]]
 name = "rbert"
 version = "0.3.3"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4854,7 +4867,7 @@ dependencies = [
 [[package]]
 name = "rphi"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4990,7 +5003,7 @@ checksum = "0e819f2bc632f285be6d7cd36e25940d45b2391dd6d9b939e79de557f7014248"
 [[package]]
 name = "rwhisper"
 version = "0.3.5"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "accelerate-src",
  "anyhow",
@@ -5017,7 +5030,7 @@ dependencies = [
 [[package]]
 name = "rwuerstchen"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5117,7 +5130,7 @@ dependencies = [
 [[package]]
 name = "segment-anything-rs"
 version = "0.3.2"
-source = "git+https://github.com/floneum/floneum#a55586311648dfd08b110412828b52f80fe10a3a"
+source = "git+https://github.com/floneum/floneum#e45f3638b0d2638e4f4279fd13e9c4c36faeda5f"
 dependencies = [
  "anyhow",
  "candle-core",
