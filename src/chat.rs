@@ -8,16 +8,17 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tokio_stream::StreamExt;
 use ulid::Ulid;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct ChatRequest {
     prompt: String,
 }
 
+#[tracing::instrument(skip(state))]
 #[post("/completions")]
 async fn completions(
     web::Json(request_data): web::Json<ChatRequest>,
     state: web::Data<AppState>,
-) -> impl Responder {
+) -> Result<impl Responder, actix_web::Error> {
     let stream = state.chat.lock().unwrap().add_message(request_data.prompt);
 
     let ulid = Ulid::new();
@@ -32,9 +33,10 @@ async fn completions(
         let data = sse::Data::new(chunk_str);
         Ok::<_, Infallible>(sse::Event::Data(data))
     });
-    sse::Sse::from_stream(sse_stream)
+    Ok(sse::Sse::from_stream(sse_stream))
 }
 
+#[tracing::instrument]
 pub fn chat_service() -> impl HttpServiceFactory {
     web::scope("/chat").service(completions)
 }

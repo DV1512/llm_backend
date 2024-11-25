@@ -1,27 +1,32 @@
 use crate::chat::chat_service;
 use crate::state::AppState;
 use actix_cors::Cors;
-use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
-use env_logger::Env;
+use error::ServerError;
+use logging::init_tracing;
+use tracing_actix_web::TracingLogger;
 
 mod chat;
+mod error;
+mod logging;
 mod state;
 
 #[actix_web::main]
-async fn main() -> Result<(), std::io::Error> {
-    let state = web::Data::new(AppState::new().await);
+async fn main() -> Result<(), ServerError> {
+    init_tracing()?;
 
-    env_logger::init_from_env(Env::default().default_filter_or("info"));
+    let state = web::Data::new(AppState::new().await);
 
     HttpServer::new(move || {
         App::new()
             .wrap(Cors::permissive())
-            .wrap(Logger::default())
+            .wrap(TracingLogger::default())
             .app_data(state.clone())
             .service(chat_service())
     })
-    .bind("[::1]:8000")?
+    .bind("0.0.0.0:8000")?
     .run()
-    .await
+    .await?;
+
+    Ok(())
 }
