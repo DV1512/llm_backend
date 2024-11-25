@@ -1,7 +1,7 @@
 use kalosm::language::{Chat, Llama, LlamaSource};
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ThreatActor {
@@ -19,7 +19,8 @@ pub struct Prompt {
 }
 
 pub struct AppState {
-    pub chat: Mutex<Chat>,
+    //pub chat: Mutex<Chat>,
+    pub model: Arc<Llama>,
     pub threat_groups: Vec<ThreatActor>,
     pub prompts: Vec<Prompt>,
 }
@@ -31,11 +32,11 @@ fn load_prompts() -> Vec<Prompt> {
 
 impl AppState {
     pub async fn new() -> Self {
-        let model = Llama::builder()
+        let model = Arc::new(Llama::builder()
             .with_source(LlamaSource::llama_3_1_8b_chat())
             .build()
             .await
-            .unwrap();
+            .unwrap());
 
         let json_data = fs::read_to_string("data.json").expect("Failed to read");
         let threat_groups: Vec<ThreatActor> =
@@ -44,7 +45,8 @@ impl AppState {
         let prompts = load_prompts();
 
         Self {
-            chat: Mutex::new(Chat::builder(model).build()),
+            //chat: Mutex::new(Chat::builder(model).build()),
+            model,
             threat_groups,
             prompts,
         }

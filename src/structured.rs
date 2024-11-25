@@ -5,6 +5,7 @@ use kalosm::language::*;
 use serde::Deserialize;
 use serde_json::{from_str, Value};
 use crate::actor::Actor;
+use crate::state::AppState;
 
 #[derive(Deserialize)]
 struct Request {
@@ -12,13 +13,7 @@ struct Request {
 }
 
 #[post("/structured")]
-pub async fn structured(web::Json(prompt): web::Json<Request>) -> impl Responder {
-    let model = Llama::builder()
-        .with_source(LlamaSource::llama_3_1_8b_chat())
-        .build()
-        .await
-        .unwrap();
-
+pub async fn structured(web::Json(prompt): web::Json<Request>, state: web::Data<AppState>) -> impl Responder {
     let constraints = Actor::new_parser();
 
     let task = Task::builder("You generate Json reports of which threat group is linked to the provided text.")
@@ -28,7 +23,7 @@ pub async fn structured(web::Json(prompt): web::Json<Request>) -> impl Responder
     let format = r#"{"id": string, "name": string, "description": string, "url": string, "associated_names": string[]}"#;
     let prompt = format!("{} answer with this format: {}", prompt.text, format);
 
-    let mut res = task.run(prompt, &model);
+    let mut res = task.run(prompt, &*state.model.clone());
 
     /*let sse_stream = res.stream().map(move |item| -> Result<sse::Event, _> {
         let data = sse::Data::new(item);

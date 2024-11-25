@@ -7,8 +7,10 @@ use serde_json::{to_string, Value};
 use std::convert::Infallible;
 use std::fs::OpenOptions;
 use std::io::Write;
+use std::ops::Deref;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
+use kalosm::language::Chat;
 use tokio_stream::StreamExt;
 use ulid::Ulid;
 use crate::structured::structured;
@@ -129,7 +131,8 @@ async fn templated(
         .replace("{associated_names}", &group.associated_names.join(", "))
         .replace("{template_question}", &request_data.prompt_template);
 
-    let stream = state.chat.lock().unwrap().add_message(prompt);
+    let mut chat = Chat::builder((*state.model).clone()).build();
+    let stream = chat.add_message(prompt);
 
     let ulid = Ulid::new();
     let timestamp = SystemTime::now()
@@ -161,7 +164,9 @@ async fn completions(
     web::Json(request_data): web::Json<ChatRequest>,
     state: web::Data<AppState>,
 ) -> impl Responder {
-    let stream = state.chat.lock().unwrap().add_message(request_data.prompt);
+
+    let mut chat = Chat::builder((*state.model).clone()).build();
+    let stream = chat.add_message(request_data.prompt);
 
     let ulid = Ulid::new();
     let timestamp = SystemTime::now()
