@@ -1,6 +1,6 @@
 [
     {
-        "ID": "G0007",
+        "id": "G0007",
         "name": "APT28",
         "description": "APT28 is attributed to Russia's GRU and has been active since 2004. Known for targeting political entities and conducting cyber operations.",
         "url": "https://attack.mitre.org/groups/G0007",
@@ -12,7 +12,7 @@
         ]
     },
     {
-        "ID": "G0016",
+        "id": "G0016",
         "name": "APT29",
         "description": "APT29, linked to Russia's SVR, has targeted government networks in NATO countries and was involved in the SolarWinds campaign.",
         "url": "https://attack.mitre.org/groups/G0016",
@@ -23,7 +23,7 @@
         ]
     },
     {
-        "ID": "G0047",
+        "id": "G0047",
         "name": "Sandworm Team",
         "description": "Sandworm Team is tied to Russian GRU and responsible for major disruptive operations like NotPetya and the Ukraine power grid attacks.",
         "url": "https://attack.mitre.org/groups/G0047",
@@ -33,7 +33,7 @@
         ]
     },
     {
-        "ID": "G0119",
+        "id": "G0119",
         "name": "Turla",
         "description": "Turla is known for sophisticated espionage targeting government and diplomatic entities worldwide, often linked to Russia's FSB.",
         "url": "https://attack.mitre.org/groups/G0119",
@@ -44,17 +44,17 @@
         ]
     },
     {
-        "ID": "G0069",
+        "id": "G0069",
         "name": "Evil Corp",
         "description": "Evil Corp is a Russian cybercriminal group involved in financial theft and ransomware campaigns.",
         "url": "https://attack.mitre.org/groups/G0069",
         "associated_names": [
             "Dridex",
-            "INDRIK SPIDER"
+            "INDRIK SPidER"
         ]
     },
     {
-        "ID": "G0034",
+        "id": "G0034",
         "name": "Sandworm",
         "description": "Sandworm has conducted major disruptive attacks, including on Ukrainian infrastructure and global ransomware campaigns.",
         "url": "https://attack.mitre.org/groups/G0034",
@@ -64,7 +64,7 @@
         ]
     },
     {
-        "ID": "G0038",
+        "id": "G0038",
         "name": "Gamaredon Group",
         "description": "Gamaredon is a Russian cyber-espionage group that focuses on Ukrainian government and military entities.",
         "url": "https://attack.mitre.org/groups/G0038",
@@ -74,7 +74,7 @@
         ]
     },
     {
-        "ID": "G1000",
+        "id": "G1000",
         "name": "Zebrocy",
         "description": "Zebrocy is a Russian-linked group using custom malware to target governmental and military organizations globally.",
         "url": "https://attack.mitre.org/groups/G1000",
@@ -84,7 +84,7 @@
         ]
     },
     {
-        "ID": "G0023",
+        "id": "G0023",
         "name": "Armageddon",
         "description": "Armageddon is a Russia-linked group targeting critical infrastructure with espionage and disruptive attacks.",
         "url": "https://attack.mitre.org/groups/G0023",
@@ -94,7 +94,7 @@
         ]
     },
     {
-        "ID": "G0102",
+        "id": "G0102",
         "name": "Berserk Bear",
         "description": "Berserk Bear is linked to Russian intelligence and targets critical infrastructure in Europe and North America.",
         "url": "https://attack.mitre.org/groups/G0102",

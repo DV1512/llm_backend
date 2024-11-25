@@ -5,9 +5,9 @@ use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use env_logger::Env;
 
+mod actor;
 mod chat;
 mod state;
-mod actor;
 mod structured;
 
 #[actix_web::main]
