@@ -10,8 +10,8 @@ struct Request {
     text: String,
 }
 pub async fn convert_to_string(state: &AppState) -> Result<String, serde_json::Error> {
-    let all_data = &state.threat_groups; // Reference to Vec<ThreatActor>
-    let serialized = serde_json::to_string(all_data)?; // Serialize the vector to a JSON string
+    let all_data = &state.threat_groups;
+    let serialized = serde_json::to_string(all_data)?;
     Ok(serialized)
 }
 
