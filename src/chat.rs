@@ -1,19 +1,18 @@
 use crate::state::AppState;
+use crate::structured::structured;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::{post, web, Responder};
 use actix_web_lab::sse;
-use serde::{de, Deserialize, Serialize};
-use serde_json::{to_string, Value};
+use kalosm::language::Chat;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::convert::Infallible;
 use std::fs::OpenOptions;
 use std::io::Write;
-use std::ops::Deref;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
-use kalosm::language::Chat;
 use tokio_stream::StreamExt;
 use ulid::Ulid;
-use crate::structured::structured;
 
 #[derive(Serialize, Deserialize)]
 struct ChatRequest {
@@ -164,7 +163,6 @@ async fn completions(
     web::Json(request_data): web::Json<ChatRequest>,
     state: web::Data<AppState>,
 ) -> impl Responder {
-
     let mut chat = Chat::builder((*state.model).clone()).build();
     let stream = chat.add_message(request_data.prompt);
 
@@ -184,7 +182,10 @@ async fn completions(
 }
 
 pub fn chat_service() -> impl HttpServiceFactory {
-    web::scope("/chat").service(completions).service(templated).service(structured)
+    web::scope("/chat")
+        .service(completions)
+        .service(templated)
+        .service(structured)
 }
 
 #[derive(Serialize)]
