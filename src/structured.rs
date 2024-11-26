@@ -4,6 +4,7 @@ use actix_web::{post, web, Responder};
 use kalosm::language::*;
 use serde::Deserialize;
 use serde_json::{from_str, Value};
+use std::time::Instant;
 
 #[derive(Deserialize)]
 struct Request {
@@ -28,6 +29,8 @@ pub async fn structured(
     .with_constraints(constraints)
     .build();
 
+    let start_time = Instant::now();
+
     // Attempt to find a matching group.name
     let matched_group = state.threat_groups.iter().find(|group| {
         prompt.text.contains(&group.name)
@@ -36,6 +39,9 @@ pub async fn structured(
                 .iter()
                 .any(|alias| prompt.text.contains(alias))
     });
+    let duration = start_time.elapsed();
+    println!("{}", duration.as_millis());
+
     let all_data = convert_to_string(&state).await.unwrap();
 
     let final_prompt = if let Some(group) = matched_group {
@@ -49,6 +55,7 @@ pub async fn structured(
         }}"#,
             group.id, group.name, group.description, group.url, group.associated_names
         );
+        println!("{}", group.name);
 
         let format = r#"{"id": string, "name": string, "description": string, "url": string, "associated_names": string[]}"#;
         format!(
