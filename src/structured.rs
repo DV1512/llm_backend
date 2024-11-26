@@ -31,14 +31,16 @@ pub async fn structured(
 
     let start_time = Instant::now();
 
+    let matched_group = state.threat_groups.get(&prompt.text);
+
     // Attempt to find a matching group.name
-    let matched_group = state.threat_groups.iter().find(|group| {
-        prompt.text.contains(&group.name)
-            || group
-                .associated_names
-                .iter()
-                .any(|alias| prompt.text.contains(alias))
-    });
+    //let matched_group = state.threat_groups.iter().find(|group| {
+    //    prompt.text.contains(&group.name)
+    //        || group
+    //            .associated_names
+    //            .iter()
+    //            .any(|alias| prompt.text.contains(alias))
+    //});
     let duration = start_time.elapsed();
     println!("{}", duration.as_millis());
 

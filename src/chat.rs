@@ -1,7 +1,12 @@
-use crate::state::AppState;
+pub fn chat_service() -> impl HttpServiceFactory {
+    web::scope("/chat").service(structured)
+}
+
 use crate::structured::structured;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::{post, web, Responder};
+/*
+use crate::state::AppState;
 use actix_web_lab::sse;
 use kalosm::language::Chat;
 use serde::{Deserialize, Serialize};
@@ -213,3 +218,4 @@ impl ChatMessageChunk {
         }
     }
 }
+*/

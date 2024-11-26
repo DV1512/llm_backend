@@ -1,11 +1,13 @@
 use kalosm::language::{Llama, LlamaSource};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs;
+use std::hash::Hash;
 use std::sync::Arc;
 use surrealdb::engine::remote::ws::{Client, Ws};
 use surrealdb::Surreal;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Hash)]
 pub struct ThreatActor {
     pub id: String,
     pub name: String,
@@ -22,7 +24,8 @@ pub struct Prompt {
 
 pub struct AppState {
     pub model: Arc<Llama>,
-    pub threat_groups: Vec<ThreatActor>,
+    //pub threat_groups: Vec<ThreatActor>,
+    pub threat_groups: HashMap<String, ThreatActor>,
     pub prompts: Vec<Prompt>,
     pub db: Arc<Surreal<Client>>,
 }
@@ -69,8 +72,13 @@ impl AppState {
         );
 
         let json_data = fs::read_to_string("data.json").expect("Failed to read");
-        let threat_groups: Vec<ThreatActor> =
-            serde_json::from_str(&json_data).expect("JSON failed");
+        let data: Vec<ThreatActor> = serde_json::from_str(&json_data).expect("JSON failed");
+
+        let mut threat_groups: HashMap<String, ThreatActor> = HashMap::new();
+
+        for group in data {
+            threat_groups.insert(group.id.clone(), group);
+        }
 
         let prompts = load_prompts();
 
