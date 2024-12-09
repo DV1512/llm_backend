@@ -1,0 +1,285 @@
+# Old Structured:
+/*
+pub async fn structured(
+    prompt: String,
+    app_state: web::Data<AppState>,
+    model: Arc<Llama>,
+) -> HttpResponse {
+    // THE PAST CODE
+
+    // Retrieve preloaded data
+    let mitigations = app_state
+        .get_data("mitre_mitigations")
+        .cloned()
+        .unwrap_or_default();
+
+    // Construct the final prompt
+    /*
+    let final_prompt = format!(
+        "{}\n\nHere is additional data:\n\nMitigations:\n{}\n\nTechniques:\n{}",
+        prompt, mitigations, techniques
+    );
+     */
+
+    // Build and run the task
+    let task = Task::builder_for::<Rapport>("You threat model a given input and generate a JSON rapport with vulnerabilities and mitigations. Give the top 3 most likely.")
+        .build();
+    /*
+    let format_prompt = r#"""
+    {
+        "summary": string,
+        "items": {
+            "name": string,
+            "description": string,
+            "mitigations: {
+                "name": string,
+                "description": string,
+                "url": url,
+                "citations": string
+            }[]
+        }[]
+    }
+    """#;
+
+    let final_prompt = format!(
+        "Answer the following, User Request: {}.\n, this is the format: {}. Here is some more data to use as reference:\nTechniques: {}.\nMitigations: {}",
+        prompt, format_prompt, "None", mitigations
+    );
+    */
+
+    // Construct the final prompt
+    let final_prompt = format!(
+        r#"
+    You are a cybersecurity expert. Your task is to generate a detailed report analyzing potential vulnerabilities in the provided system and suggesting mitigation strategies.
+
+    **User Input:**
+    {}
+
+    **Instructions:**
+    1. Analyze the input to identify potential vulnerabilities.
+    2. Assign a likelihood score to each vulnerability on a scale from 1 (low) to 10 (high).
+    3. Provide detailed mitigation strategies for each vulnerability, using the provided data.
+
+    **Relevant Data:**
+    Mitigations:
+    {}
+
+
+
+    **Output Format:**
+    {{
+        "summary": string,
+        "items": [
+            {{
+                "name": string,
+                "description": string,
+                "likelihood": number,
+                "mitigations": [
+                    {{
+                        "name": string,
+                        "description": string,
+                        "url": string
+                    }}
+                ]
+            }}
+        ]
+    }}
+    "#,
+        prompt,
+        serde_json::to_string_pretty(&mitigations).unwrap()
+    );
+    println!("{}", final_prompt);
+
+    let res = task.run(final_prompt, &*model);
+    let text = res.text().await;
+
+    let parsed: Value = serde_json::from_str(&text).unwrap();
+
+    let chunk = ChatMessageChunk::new_serialized(
+        Ulid::new(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went backwards?")
+            .as_secs(),
+        ChatRole::Assistant,
+        parsed,
+    );
+
+    HttpResponse::Ok().json(chunk)
+}
+*/
+
+
+
+# OLD Structured with words etc..
+pub async fn structured(
+    prompt: String,
+    app_state: web::Data<AppState>,
+    model: Arc<Llama>,
+) -> HttpResponse {
+    // Predefined keyword-to-mitigation mapping
+    let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
+        ("website", vec!["M1036", "M1048", "M1057"]), // Account Use Policies, Application Isolation, Data Loss Prevention
+        ("web", vec!["M1036", "M1047", "M1050"]), // Account Use Policies, Audit, Exploit Protection
+        ("database", vec!["M1049", "M1028", "M1032"]), // Antivirus, OS Configuration, Multi-factor Authentication
+        ("backend", vec!["M1015", "M1042", "M1025"]), // Active Directory, Disable Feature, Privileged Process Integrity
+        ("credentials", vec!["M1043", "M1034", "M1033"]), // Credential Access Protection, Limit Hardware, Limit Software
+        ("security", vec!["M1050", "M1041", "M1038"]), // Exploit Protection, Encrypt Sensitive Information, Execution Prevention
+        ("network", vec!["M1037", "M1035", "M1030"]), // Filter Network Traffic, Limit Network Access, Network Segmentation
+        ("authentication", vec!["M1032", "M1018", "M1026"]), // Multi-factor Authentication, User Account Management, Privileged Account Management
+        ("permissions", vec!["M1024", "M1022", "M1039"]), // Restrict Registry Permissions, File and Directory Permissions, Environment Variable Permissions
+        ("encryption", vec!["M1041", "M1051", "M1029"]), // Encrypt Sensitive Information, Update Software, Remote Data Storage
+    ]);
+
+    // Retrieve preloaded mitigations data
+    let mitigations = app_state
+        .get_data("mitre_mitigations")
+        .cloned()
+        .unwrap_or_default();
+    let mitigations: Vec<Value> =
+        serde_json::from_str(&mitigations).expect("Failed to parse mitigations JSON");
+
+    // Lowercase the user input for consistent matching
+    let lowercase_prompt = prompt.to_lowercase();
+    let words_in_prompt: Vec<&str> = lowercase_prompt.split_whitespace().collect();
+
+    // Find relevant mitigation IDs based on keywords
+    let mut relevant_mitigation_ids = Vec::new();
+    for word in words_in_prompt {
+        if let Some(mitigation_ids) = keyword_to_mitigation.get(word) {
+            relevant_mitigation_ids.extend_from_slice(mitigation_ids);
+        }
+    }
+
+    // Deduplicate IDs to avoid repetition
+    relevant_mitigation_ids.sort();
+    relevant_mitigation_ids.dedup();
+
+    // Filter the mitigations using the selected IDs
+    let selected_mitigations: Vec<&Value> = mitigations
+        .iter()
+        .filter(|m| {
+            if let Some(id) = m["ID"].as_str() {
+                relevant_mitigation_ids.contains(&id)
+            } else {
+                false
+            }
+        })
+        .collect();
+
+    // Prepare mitigations for the prompt
+    let formatted_mitigations: Vec<String> = selected_mitigations
+        .iter()
+        .map(|mitigation| {
+            format!(
+                "- {}: {}\n",
+                mitigation["name"].as_str().unwrap_or("N/A"),
+                mitigation["description"].as_str().unwrap_or("N/A")
+            )
+        })
+        .collect();
+
+    // Construct the final prompt
+    let final_prompt = format!(
+        r#"
+    You are a cybersecurity expert. Your task is to generate a detailed report analyzing potential vulnerabilities in the provided system and suggesting mitigation strategies.
+
+    **User Input:**
+    {}
+
+    **Instructions:**
+    1. Analyze the input to identify potential vulnerabilities.
+    2. Provide detailed mitigation strategies for each vulnerability, using the provided data.
+    3. List a total of 10 threats and mitigations.
+
+    **Relevant Data:**
+    {}
+
+    **Output Format:**
+    {{
+        "summary": string,
+        "items": [
+            {{
+                "name": string,
+                "description": string,
+                "mitigations": [
+                    {{
+                        "name": string,
+                        "description": string,
+                    }}
+                ]
+            }}
+        ]
+    }}
+    "#,
+        prompt,
+        formatted_mitigations.join("\n")
+    );
+    println!("{}", final_prompt);
+
+    // Run the task
+    let task = Task::builder_for::<Rapport>(
+        "You threat model a given input and generate a JSON rapport with vulnerabilities and mitigations."
+    )
+    .build();
+
+    let res = task.run(final_prompt, &*model);
+    let text = res.text().await;
+
+    // Parse the response
+    let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
+        serde_json::json!({
+            "error": "Failed to parse LLM response"
+        })
+    });
+
+    let chunk = ChatMessageChunk::new_serialized(
+        Ulid::new(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went backwards?")
+            .as_secs(),
+        ChatRole::Assistant,
+        parsed,
+    );
+
+    HttpResponse::Ok().json(chunk)
+}
+
+
+
+
+// OUtput format broken?
+**Example Output:**
+    {{
+        "summary": "This is an example of a summarized report.",
+        "items": [
+            {{
+                "name": "SQL Injection Vulnerability",
+                "description": "The system is vulnerable to SQL injection due to improper sanitization of user inputs.",
+                "mitigations": [
+                    {{
+                        "name": "Use Parameterized Queries",
+                        "description": "Ensure all SQL queries use parameterized statements to avoid injection.",
+                        "url": "https://example.com/mitigation/sql-injection"
+                    }},
+                    {{
+                        "name": "Input Validation",
+                        "description": "Implement robust input validation to sanitize user inputs.",
+                        "url": "https://example.com/mitigation/input-validation"
+                    }}
+                ]
+            }},
+            {{
+                "name": "Cross-Site Scripting (XSS)",
+                "description": "The system lacks proper input sanitization, making it vulnerable to XSS attacks.",
+                "mitigations": [
+                    {{
+                        "name": "Content Security Policy",
+                        "description": "Implement a Content Security Policy to restrict loaded resources.",
+                        "url": "https://example.com/mitigation/csp"
+                    }}
+                ]
+            }}
+        ]
+    }}

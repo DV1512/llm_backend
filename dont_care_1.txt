@@ -1,0 +1,235 @@
+
+
+# Response without data "mitigations" "techniques"
+# Sent: url localhost:8000/chat/completions -d '{"type":"structured","data":"I have a web application which is connected to a backend."}' -H "Content-Type: applications/json"
+{
+  "id": "01JEM16T384C3Z85B0QPAZXR9Q",
+  "timestamp": 1733691664,
+  "role": "Assistant",
+  "contents": {
+    "items": [
+      {
+        "description": "The web application is vulnerable to SQL injection attacks due to user input not being properly sanitized.",
+        "likelihood": 8,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Implement a robust validation mechanism for all user inputs, including parameterized queries or prepared statements.",
+            "name": "Input Validation and Sanitization",
+            "url": ""
+          }
+        ],
+        "name": "SQL Injection Vulnerability"
+      },
+      {
+        "description": "The web application is vulnerable to cross-site scripting attacks due to the lack of proper input validation and sanitization.",
+        "likelihood": 9,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Implement a robust validation mechanism for all user inputs, including parameterized queries or prepared statements.",
+            "name": "Input Validation and Sanitization",
+            "url": ""
+          }
+        ],
+        "name": "Cross-Site Scripting (XSS) Vulnerability"
+      },
+      {
+        "description": "The web application is vulnerable to authentication bypass attacks due to weak password policies and lack of proper session management.",
+        "likelihood": 7,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Enforce strong passwords, including length requirements (e.g., 12 characters), complexity rules (e.g., uppercase letters, numbers) for all user accounts.",
+            "name": "Implement Strong Password Policies",
+            "url": ""
+          }
+        ],
+        "name": "Authentication Bypass Vulnerability"
+      },
+      {
+        "description": "The web application is vulnerable to sensitive data exposure due to the lack of proper encryption and access controls.",
+        "likelihood": 6,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Use secure protocols (e.g., HTTPS, SFTP) for transmitting sensitive information.",
+            "name": "Implement Encryption Mechanisms",
+            "url": ""
+          }
+        ],
+        "name": "Sensitive Data Exposure Vulnerability"
+      },
+      {
+        "description": "The web application is vulnerable to denial-of-service attacks due to the lack of proper input validation and sanitization.",
+        "likelihood": 5,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Implement a robust validation mechanism for all user inputs, including parameterized queries or prepared statements.",
+            "name": "Input Validation and Sanitization",
+            "url": ""
+          }
+        ],
+        "name": "Denial of Service Vulnerability"
+      },
+      {
+        "description": "The web application is vulnerable to cross-site request forgery attacks due to the lack of proper token-based protection.",
+        "likelihood": 4,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Use a secure random value or session ID as an anti-CSRF token.",
+            "name": "Implement Token-Based Protection Mechanism",
+            "url": ""
+          }
+        ],
+        "name": "Cross-Site Request Forgery (CSRF) Vulnerability"
+      },
+      {
+        "description": "The web application is vulnerable to SQL injection attacks due to the lack of proper parameterization in queries.",
+        "likelihood": 3,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Use prepared statements or query parameters for all database interactions.",
+            "name": "Implement Parameterized Query Mechanism",
+            "url": ""
+          }
+        ],
+        "name": "SQL Injection Vulnerability (Parameterized Queries)"
+      },
+      {
+        "description": "The web application is vulnerable to cross-site scripting attacks due to the lack of proper input validation and sanitization.",
+        "likelihood": 2,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "Use a combination of techniques, such as whitelisting, blacklisting, or parameterized queries.",
+            "name": "Implement Robust Input Validation Mechanism",
+            "url": ""
+          }
+        ],
+        "name": "Cross-Site Scripting (XSS) Vulnerability in User Input Validation"
+      },
+      {
+        "description": "The web application is vulnerable to denial of service attacks due to the lack of proper network communication protocols.",
+        "likelihood": 1,
+        "mitigations": [
+          {
+            "citations": "",
+            "description": "",
+            "name": "Implement Secure Network Communication Protocol Mechanism",
+            "url": ""
+          }
+        ],
+        "name": "Denial-of-Service (DoS) Vulnerability in Network Communication Protocols"
+      }
+    ],
+    "summary": "Web Application Connected to Backend"
+  }
+}
+
+# Response with data "mitigations" "techniques"
+# sent: url localhost:8000/chat/completions -d '{"type":"structured","data":"I have a web application which is connected to a backend."}' -H "Content-Type: applications/json"
+
+{
+  "id": "01JEM6T8CY6H5510SQK3068S6C",
+  "timestamp": 1733697544,
+  "role": "Assistant",
+  "contents": {
+    "summary": "Potential vulnerabilities in the web application connected to a backend.",
+    "items": [
+      {
+        "name": "SQL Injection Vulnerability",
+        "description": "The web application is vulnerable to SQL injection attacks due to user input not being properly sanitized.",
+        "mitigations": [
+          {
+            "citations": "[1]",
+            "description": "",
+            "name": "Use prepared statements or parameterized queries",
+            "url": ""
+          },
+          {
+            "citations": "[2]",
+            "description": "",
+            "name": "Implement a Web Application Firewall (WAF)",
+            "url": ""
+          }
+        ]
+      },
+      {
+        "name": "Cross-Site Scripting (XSS) Vulnerability",
+        "description": "The web application is vulnerable to cross-site scripting attacks due to user input not being properly sanitized.",
+        "mitigations": [
+          {
+            "citations": "[3]",
+            "description": "",
+            "name": "Use a Content Security Policy (CSP)",
+            "url": ""
+          },
+          {
+            "citations": "[4]",
+            "description": "",
+            "name": "Implement an Input Validation and Sanitization Mechanism",
+            "url": ""
+          }
+        ]
+      },
+      {
+        "name": "Authentication Bypass Vulnerability",
+        "description": "The web application is vulnerable to authentication bypass attacks due to weak password policies or insecure login mechanisms.",
+        "mitigations": [
+          {
+            "citations": "[5]",
+            "description": "",
+            "name": "Implement a Strong Password Policy and Enforce Regular Updates",
+            "url": ""
+          },
+          {
+            "citations": "[6]",
+            "description": "",
+            "name": "Use Multi-Factor Authentication (MFA)",
+            "url": ""
+          }
+        ]
+      },
+      {
+        "name": "Data Exposure Vulnerability",
+        "description": "The web application is vulnerable to data exposure due to sensitive information being stored or transmitted insecurely.",
+        "mitigations": [
+          {
+            "citations": "[7]",
+            "description": "",
+            "name": "Implement Data Encryption and Secure Transmission Protocols (e.g., HTTPS)",
+            "url": ""
+          },
+          {
+            "citations": "[8]",
+            "description": "",
+            "name": "Use a Web Application Firewall (WAF) to Protect Against SQL Injection Attacks",
+            "url": ""
+          }
+        ]
+      },
+      {
+        "name": "Cross-Site Request Forgery (CSRF) Vulnerability",
+        "description": "The web application is vulnerable to cross-site request forgery attacks due to user input not being properly validated.",
+        "mitigations": [
+          {
+            "citations": "[9]",
+            "description": "",
+            "name": "Implement a Token-Based CSRF Protection Mechanism (e.g., Synchronizer Token)",
+            "url": ""
+          },
+          {
+            "citations": "[10]",
+            "description": "",
+            "name": "Use the Same-Origin Policy",
+            "url": ""
+          }
+        ]
+      }
+    ]
+  }
+}

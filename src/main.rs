@@ -6,16 +6,15 @@ use error::ServerError;
 use logging::init_tracing;
 use tracing_actix_web::TracingLogger;
 
+mod dto;
 mod endpoints;
 mod error;
 mod logging;
-pub(crate) mod rapport;
-mod state;
 mod models;
+pub(crate) mod rapport;
 mod responders;
-mod dto;
 mod services;
-
+mod state;
 #[actix_web::main]
 async fn main() -> Result<(), ServerError> {
     init_tracing()?;

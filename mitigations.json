@@ -1,0 +1,421 @@
+[
+    {
+        "ID": "M1036",
+        "name": "Account Use Policies",
+        "description": "Configure features related to account use like login attempt lockouts, specific login times, etc.",
+        "url": "https://attack.mitre.org/mitigations/M1036"
+    },
+    {
+        "ID": "M1015",
+        "name": "Active Directory Configuration",
+        "description": "Implement robust Active Directory configurations using group policies to control access and reduce the attack surface. Specific examples include:  * Account Configuration: Use provisioned domain accounts rather than local accounts to leverage centralized control and auditing capabilities. * Interactive Logon Restrictions: Enforce group policies that prohibit interactive logons for accounts that should not directly access systems. * Remote Desktop Settings: Limit Remote Desktop logons to authorized accounts to prevent misuse by adversaries. * Dedicated Administrative Accounts: Create specialized domain-wide accounts that are restricted from interactive logons but can perform specific tasks like installations or repository access. * Authentication Silos: Configure Authentication Silos in Active Directory to create access zones with restrictions based on membership in the Protected Users global security group. This setup enhances security by applying additional protections to high-risk accounts, limiting their exposure to potential attacks.",
+        "url": "https://attack.mitre.org/mitigations/M1015"
+    },
+    {
+        "ID": "M1049",
+        "name": "Antivirus/Antimalware",
+        "description": "Use signatures or heuristics to detect malicious software.",
+        "url": "https://attack.mitre.org/mitigations/M1049"
+    },
+    {
+        "ID": "M1013",
+        "name": "Application Developer Guidance",
+        "description": "This mitigation describes any guidance or training given to developers of applications to avoid introducing security weaknesses that an adversary may be able to take advantage of.",
+        "url": "https://attack.mitre.org/mitigations/M1013"
+    },
+    {
+        "ID": "M1048",
+        "name": "Application Isolation and Sandboxing",
+        "description": "Restrict execution of code to a virtual environment on or in transit to an endpoint system.",
+        "url": "https://attack.mitre.org/mitigations/M1048"
+    },
+    {
+        "ID": "M1047",
+        "name": "Audit",
+        "description": "Perform audits or scans of systems, permissions, insecure software, insecure configurations, etc. to identify potential weaknesses.",
+        "url": "https://attack.mitre.org/mitigations/M1047"
+    },
+    {
+        "ID": "M1040",
+        "name": "Behavior Prevention on Endpoint",
+        "description": "Use capabilities to prevent suspicious behavior patterns from occurring on endpoint systems. This could include suspicious process, file, API call, etc. behavior.",
+        "url": "https://attack.mitre.org/mitigations/M1040"
+    },
+    {
+        "ID": "M1046",
+        "name": "Boot Integrity",
+        "description": "Use secure methods to boot a system and verify the integrity of the operating system and loading mechanisms.",
+        "url": "https://attack.mitre.org/mitigations/M1046"
+    },
+    {
+        "ID": "M1045",
+        "name": "Code Signing",
+        "description": "Enforce binary and application integrity with digital signature verification to prevent untrusted code from executing.",
+        "url": "https://attack.mitre.org/mitigations/M1045"
+    },
+    {
+        "ID": "M1043",
+        "name": "Credential Access Protection",
+        "description": "Use capabilities to prevent successful credential access by adversaries; including blocking forms of credential dumping.",
+        "url": "https://attack.mitre.org/mitigations/M1043"
+    },
+    {
+        "ID": "M1053",
+        "name": "Data Backup",
+        "description": "Take and store data backups from end user systems and critical servers. Ensure backup and storage systems are hardened and kept separate from the corporate network to prevent compromise.",
+        "url": "https://attack.mitre.org/mitigations/M1053"
+    },
+    {
+        "ID": "M1057",
+        "name": "Data Loss Prevention",
+        "description": "Use a data loss prevention (DLP) strategy to categorize sensitive data, identify data formats indicative of personal identifiable information (PII), and restrict exfiltration of sensitive data.(Citation: PurpleSec Data Loss Prevention)",
+        "url": "https://attack.mitre.org/mitigations/M1057"
+    },
+    {
+        "ID": "M1042",
+        "name": "Disable or Remove Feature or Program",
+        "description": "Remove or deny access to unnecessary and potentially vulnerable software to prevent abuse by adversaries.",
+        "url": "https://attack.mitre.org/mitigations/M1042"
+    },
+    {
+        "ID": "M1055",
+        "name": "Do Not Mitigate",
+        "description": "This category is to associate techniques that mitigation might increase risk of compromise and therefore mitigation is not recommended.",
+        "url": "https://attack.mitre.org/mitigations/M1055"
+    },
+    {
+        "ID": "M1041",
+        "name": "Encrypt Sensitive Information",
+        "description": "Protect sensitive information with strong encryption.",
+        "url": "https://attack.mitre.org/mitigations/M1041"
+    },
+    {
+        "ID": "M1039",
+        "name": "Environment Variable Permissions",
+        "description": "Prevent modification of environment variables by unauthorized users and groups.",
+        "url": "https://attack.mitre.org/mitigations/M1039"
+    },
+    {
+        "ID": "M1038",
+        "name": "Execution Prevention",
+        "description": "Block execution of code on a system through application control, and/or script blocking.",
+        "url": "https://attack.mitre.org/mitigations/M1038"
+    },
+    {
+        "ID": "M1050",
+        "name": "Exploit Protection",
+        "description": "Use capabilities to detect and block conditions that may lead to or be indicative of a software exploit occurring.",
+        "url": "https://attack.mitre.org/mitigations/M1050"
+    },
+    {
+        "ID": "M1037",
+        "name": "Filter Network Traffic",
+        "description": "Use network appliances to filter ingress or egress traffic and perform protocol-based filtering. Configure software on endpoints to filter network traffic.",
+        "url": "https://attack.mitre.org/mitigations/M1037",
+        "created": "11 June 2019",
+        "last modified": "17 October 2024",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: Microsoft Preventing SMB),(Citation: Cisco ARP Poisoning Mitigation 2016),(Citation: Juniper DAI 2020),(Citation: CERT-EU DDoS March 2017),(Citation: US-CERT TA17-156A SNMP Abuse 2017),(Citation: US-CERT SMB Security),(Citation: byt3bl33d3r NTLM Relaying),(Citation: US-CERT APT Energy Oct 2017),(Citation: Microsoft SMB Packet Signing),(Citation: RedLock Instance Metadata API 2018),(Citation: Secure Ideas SMB Relay),(Citation: ntlm_relaying_kerberos_del)"
+    },
+    {
+        "ID": "M1035",
+        "STIX ID": "course-of-action--1dcaeb21-9348-42ea-950a-f842aaf1ae1f",
+        "name": "Limit Access to Resource Over Network",
+        "description": "Prevent access to file shares, remote access to systems, unnecessary services. Mechanisms to limit access may include use of network concentrators, RDP gateways, etc.",
+        "url": "https://attack.mitre.org/mitigations/M1035",
+        "created": "11 June 2019",
+        "last modified": "09 June 2020",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: Wikipedia 802.1x),(Citation: Docker Daemon Socket Protect),(Citation: Kubernetes API Control Access),(Citation: TechNet RDP Gateway),(Citation: Kubernetes Cloud Native Security),(Citation: Microsoft AKS Azure AD 2023)"
+    },
+    {
+        "ID": "M1034",
+        "STIX ID": "course-of-action--2995bc22-2851-4345-ad19-4e7e295be264",
+        "name": "Limit Hardware Installation",
+        "description": "Block users or groups from installing or using unapproved hardware on systems, including USB devices.",
+        "url": "https://attack.mitre.org/mitigations/M1034",
+        "created": "11 June 2019",
+        "last modified": "09 June 2020",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": null
+    },
+    {
+        "ID": "M1033",
+        "STIX ID": "course-of-action--23843cff-f7b9-4659-a7b7-713ef347f547",
+        "name": "Limit Software Installation",
+        "description": "Block users or groups from installing unapproved software.",
+        "url": "https://attack.mitre.org/mitigations/M1033",
+        "created": "11 June 2019",
+        "last modified": "17 October 2024",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: Cider Security Top 10 CICD Security Risks)"
+    },
+    {
+        "ID": "M1032",
+        "STIX ID": "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0",
+        "name": "Multi-factor Authentication",
+        "description": "Use two or more pieces of evidence to authenticate to a system; such as username and password in addition to a token from a physical smart card or token generator.",
+        "url": "https://attack.mitre.org/mitigations/M1032",
+        "created": "10 June 2019",
+        "last modified": "21 October 2022",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: Amazon S3 Security, 2019),(Citation: MFA Fatigue Attacks - PortSwigger),(Citation: Microsoft Nobelium Admin Privileges),(Citation: Expel IO Evil in AWS),(Citation: Mandiant APT29 Microsoft 365 2022),(Citation: Evilginx 2 July 2018),(Citation: Microsoft - Device Registration),(Citation: CISA MFA PrintNightmare),(Citation: Cisco IOS Software Integrity Assurance - TACACS),(Citation: Berkley Secure),(Citation: AWS - IAM Console Best Practices)"
+    },
+    {
+        "ID": "M1031",
+        "STIX ID": "course-of-action--12241367-a8b7-49b4-b86e-2236901ba50c",
+        "name": "Network Intrusion Prevention",
+        "description": "Use intrusion detection signatures to block traffic at network boundaries.",
+        "url": "https://attack.mitre.org/mitigations/M1031",
+        "created": "10 June 2019",
+        "last modified": "17 October 2024",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: US-CERT-TA18-106A),(Citation: US-CERT TA18-106A Network Infrastructure Devices 2018),(Citation: Cisco Umbrella DGA Brute Force),(Citation: Cybereason Dissecting DGAs),(Citation: dhcp_serv_op_events),(Citation: University of Birmingham C2),(Citation: Akamai DGA Mitigation),(Citation: Anomali Template Injection MAR 2018)"
+    },
+    {
+        "ID": "M1030",
+        "STIX ID": "course-of-action--86598de0-b347-4928-9eb0-0acbfc21908c",
+        "name": "Network Segmentation",
+        "description": "Architect sections of the network to isolate critical systems, functions, or resources. Use physical and logical segmentation to prevent access to potentially sensitive systems and information. Use a DMZ to contain any internet-facing services that should not be exposed from the internal network. Configure separate virtual private cloud (VPC) instances to isolate critical cloud systems.",
+        "url": "https://attack.mitre.org/mitigations/M1030",
+        "created": "10 June 2019",
+        "last modified": "14 May 2020",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: NSA Spotting),(Citation: Harmj0y Domain Trusts),(Citation: TechNet Firewall Design),(Citation: US-CERT TA17-156A SNMP Abuse 2017)"
+    },
+    {
+        "ID": "M1028",
+        "STIX ID": "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3",
+        "name": "Operating System Configuration",
+        "description": "Make configuration changes related to the operating system or a common feature of the operating system that result in system hardening against techniques.",
+        "url": "https://attack.mitre.org/mitigations/M1028",
+        "created": "06 June 2019",
+        "last modified": "31 March 2023",
+        "domain": "enterprise-attack",
+        "version": 1.2,
+        "relationship citations": "(Citation: TechNet Server Operator Scheduled Task),(Citation: Tilbury Windows Credentials),(Citation: SpectorOps Code Signing Dec 2017),(Citation: Apple Developer Doco Hardened Runtime),(Citation: Windows Anonymous Enumeration of SAM Accounts),(Citation: Seqrite DoubleExtension),(Citation: Microsoft WDigest Mit),(Citation: HowToGeek ShowExtension),(Citation: Microsoft GPO Bluetooth FEB 2009),(Citation: reagentc_cmd),(Citation: Windows RDP Sessions),(Citation: TechNet RDP NLA),(Citation: TechRepublic Wireless GPO FEB 2009),(Citation: Microsoft BITS),(Citation: Microsoft Disable NTLM Nov 2012),(Citation: UCF STIG Elevation Account Enumeration),(Citation: EnableMPRNotifications),(Citation: TechNet Removable Media Control)"
+    },
+    {
+        "ID": "M1060",
+        "STIX ID": "course-of-action--80a0e940-f683-4fbd-ac00-e9f935f2f808",
+        "name": "Out-of-Band Communications Channel",
+        "description": "Establish secure out-of-band communication channels to ensure the continuity of critical communications during security incidents, data integrity attacks, or in-network communication failures. Out-of-band communication refers to using an alternative, separate communication path that is not dependent on the potentially compromised primary network infrastructure. This method can include secure messaging apps, encrypted phone lines, satellite communications, or dedicated emergency communication systems. Leveraging these alternative channels reduces the risk of adversaries intercepting, disrupting, or tampering with sensitive communications and helps coordinate an effective incident response.(Citation: TrustedSec OOB Communications)(Citation: NIST Special Publication 800-53 Revision 5)",
+        "url": "https://attack.mitre.org/mitigations/M1060",
+        "created": "30 August 2024",
+        "last modified": "12 October 2024",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: TrustedSec OOB Communications)"
+    },
+    {
+        "ID": "M1027",
+        "STIX ID": "course-of-action--90c218c3-fbf8-4830-98a7-e8cfb7eaa485",
+        "name": "Password Policies",
+        "description": "Set and enforce secure password policies for accounts.",
+        "url": "https://attack.mitre.org/mitigations/M1027",
+        "created": "06 June 2019",
+        "last modified": "21 October 2022",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: US-CERT Alert TA13-175A Risks of Default Passwords on the Internet),(Citation: store_pwd_rev_enc),(Citation: AdSecurity Cracking Kerberos Dec 2015),(Citation: Microsoft Install Password Filter n.d),(Citation: NIST 800-63-3),(Citation: AWS - IAM Console Best Practices)"
+    },
+    {
+        "ID": "M1056",
+        "STIX ID": "course-of-action--78bb71be-92b4-46de-acd6-5f998fedf1cc",
+        "name": "Pre-compromise",
+        "description": "This category is used for any applicable mitigation activities that apply to techniques occurring before an adversary gains Initial Access, such as Reconnaissance and Resource Development techniques.",
+        "url": "https://attack.mitre.org/mitigations/M1056",
+        "created": "19 October 2020",
+        "last modified": "20 October 2020",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": null
+    },
+    {
+        "ID": "M1026",
+        "STIX ID": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+        "name": "Privileged Account Management",
+        "description": "Manage the creation, modification, use, and permissions associated to privileged accounts, including SYSTEM and root.",
+        "url": "https://attack.mitre.org/mitigations/M1026",
+        "created": "06 June 2019",
+        "last modified": "17 October 2024",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: Microsoft Azure security baseline for Azure Active Directory),(Citation: TechNet Credential Theft),(Citation: AdSecurity Cracking Kerberos Dec 2015),(Citation: MagicWeb),(Citation: Cisco IOS Software Integrity Assurance - AAA),(Citation: Protecting Microsoft 365 From On-Premises Attacks),(Citation: Microsoft Remote Use of Local),(Citation: TechNet Scheduling Priority),(Citation: Tilbury Windows Credentials),(Citation: Netspi PowerShell Execution Policy Bypass),(Citation: Mandiant Azure Run Command 2021),(Citation: Kubernetes Admission Controllers),(Citation: CyberArk Labs Safe Mode 2016),(Citation: Microsoft runas),(Citation: Microsoft Security Alerts for Azure AD Roles),(Citation: Microsoft COM ACL),(Citation: ADSecurity AD Kerberos Attacks),(Citation: Microsoft Process Wide Com Keys),(Citation: FireEye ADFS),(Citation: FireEye WMI 2015),(Citation: Kubernetes Service Accounts),(Citation: TechNet Least Privilege),(Citation: Cisco IOS Software Integrity Assurance - TACACS),(Citation: Microsoft System Wide Com Keys),(Citation: Microsoft PS JEA),(Citation: Microsoft Securing Privileged Access),(Citation: Microsoft Create Token),(Citation: Microsoft Requests for Azure AD Roles in Privileged Identity Management),(Citation: Microsoft Replace Process Token),(Citation: Kubernetes Hardening Guide)"
+    },
+    {
+        "ID": "M1025",
+        "STIX ID": "course-of-action--72dade3e-1cba-4182-b3b3-a77ca52f02a1",
+        "name": "Privileged Process Integrity",
+        "description": "Protect processes with high privileges that can be used to interact with critical system components through use of protected process light, anti-process injection defenses, or other process integrity enforcement measures.",
+        "url": "https://attack.mitre.org/mitigations/M1025",
+        "created": "06 June 2019",
+        "last modified": "20 May 2020",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: Microsoft Configure LSA),(Citation: Microsoft LSA),(Citation: Microsoft LSA Protection Mar 2014),(Citation: Graeber 2014)"
+    },
+    {
+        "ID": "M1029",
+        "STIX ID": "course-of-action--20a2baeb-98c2-4901-bad7-dc62d0a03dea",
+        "name": "Remote Data Storage",
+        "description": "Use remote security log and sensitive file storage where access can be controlled better to prevent exposure of intrusion detection log data or sensitive information.",
+        "url": "https://attack.mitre.org/mitigations/M1029",
+        "created": "06 June 2019",
+        "last modified": "06 June 2019",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: Ready.gov IT DRP)"
+    },
+    {
+        "ID": "M1022",
+        "STIX ID": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448",
+        "name": "Restrict File and Directory Permissions",
+        "description": "Restrict access by setting directory and file permissions that are not specific to users or privileged accounts.",
+        "url": "https://attack.mitre.org/mitigations/M1022",
+        "created": "06 June 2019",
+        "last modified": "20 May 2020",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: InsiderThreat NTFS EA Oct 2017),(Citation: Microsoft W32Time May 2017),(Citation: cisco_deploy_rsa_keys),(Citation: win_xml_evt_log),(Citation: Microsoft ETW May 2018),(Citation: create_sym_links),(Citation: piazza launch agent mitigation)"
+    },
+    {
+        "ID": "M1044",
+        "STIX ID": "course-of-action--e8242a33-481c-4891-af63-4cf3e4cf6aff",
+        "name": "Restrict Library Loading",
+        "description": "Prevent abuse of library loading mechanisms in the operating system and software to load untrusted code by configuring appropriate library loading mechanisms and investigating potential vulnerable software.",
+        "url": "https://attack.mitre.org/mitigations/M1044",
+        "created": "11 June 2019",
+        "last modified": "11 June 2019",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: Microsoft DLL Security),(Citation: Microsoft Dynamic Link Library Search Order),(Citation: Microsoft More information about DLL)"
+    },
+    {
+        "ID": "M1024",
+        "STIX ID": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9",
+        "name": "Restrict Registry Permissions",
+        "description": "Restrict the ability to modify certain hives or keys in the Windows Registry.",
+        "url": "https://attack.mitre.org/mitigations/M1024",
+        "created": "06 June 2019",
+        "last modified": "31 March 2023",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: def_ev_win_event_logging),(Citation: Microsoft System Services Fundamentals),(Citation: Microsoft W32Time May 2017)"
+    },
+    {
+        "ID": "M1021",
+        "STIX ID": "course-of-action--21da4fd4-27ad-4e9c-b93d-0b9b14d02c96",
+        "name": "Restrict Web-Based Content",
+        "description": "Restrict use of certain websites, block downloads/attachments, block Javascript, restrict browser extensions, etc.",
+        "url": "https://attack.mitre.org/mitigations/M1021",
+        "created": "06 June 2019",
+        "last modified": "06 June 2019",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: NetSPI ClickOnce),(Citation: Microsoft Azure AD Admin Consent)"
+    },
+    {
+        "ID": "M1020",
+        "STIX ID": "course-of-action--7bb5fae9-53ad-4424-866b-f0ea2a8b731d",
+        "name": "SSL/TLS Inspection",
+        "description": "Break and inspect SSL/TLS sessions to look at encrypted web traffic for adversary activity.",
+        "url": "https://attack.mitre.org/mitigations/M1020",
+        "created": "06 June 2019",
+        "last modified": "06 June 2019",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": null
+    },
+    {
+        "ID": "M1054",
+        "STIX ID": "course-of-action--b5dbb4c5-b0b1-40b1-80b6-e9e84ab90067",
+        "name": "Software Configuration",
+        "description": "Implement configuration changes to software (other than the operating system) to mitigate security risks associated to how the software operates.",
+        "url": "https://attack.mitre.org/mitigations/M1054",
+        "created": "19 July 2019",
+        "last modified": "26 December 2023",
+        "domain": "enterprise-attack",
+        "version": 1.2,
+        "relationship citations": "(Citation: Session Management Cheat Sheet),(Citation: GitHub Disable DDEAUTO Oct 2017),(Citation: US-CERT TA18-106A Network Infrastructure Devices 2018),(Citation: DNS-msft),(Citation: CyberArk Labs Safe Mode 2016),(Citation: Palo Alto Office Test Sofacy),(Citation: AWS RE:Inforce Threat Detection 2024),(Citation: Google Workspace External Sharing),(Citation: ACSC Email Spoofing),(Citation: Token tactics),(Citation: Wikipedia HPKP),(Citation: Microsoft 365 External Sharing),(Citation: Cisco Securing SNMP),(Citation: Microsoft Anti Spoofing),(Citation: Enigma Reviving DDE Jan 2018),(Citation: Chromium HSTS),(Citation: CloudSploit - Unused AWS Regions),(Citation: Azure Subscription Policies)"
+    },
+    {
+        "ID": "M1019",
+        "STIX ID": "course-of-action--874c0166-e407-45c2-a1d9-e4e3a6570fd8",
+        "name": "Threat Intelligence Program",
+        "description": "A threat intelligence program helps an organization generate their own threat intelligence information and track trends to inform defensive priorities to mitigate risk.",
+        "url": "https://attack.mitre.org/mitigations/M1019",
+        "created": "06 June 2019",
+        "last modified": "06 June 2019",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": null
+    },
+    {
+        "ID": "M1051",
+        "STIX ID": "course-of-action--e5d930e9-775a-40ad-9bdb-b941d8dfe86b",
+        "name": "Update Software",
+        "description": "Perform regular software updates to mitigate exploitation risk.",
+        "url": "https://attack.mitre.org/mitigations/M1051",
+        "created": "11 June 2019",
+        "last modified": "07 July 2020",
+        "domain": "enterprise-attack",
+        "version": 1.0,
+        "relationship citations": "(Citation: SensePost Outlook Home Page),(Citation: SensePost Outlook Forms),(Citation: MS14-025),(Citation: Cisco Blog Legacy Device Attacks),(Citation: ADSecurity Finding Passwords in SYSVOL),(Citation: NSA Spotting),(Citation: Github UACMe)"
+    },
+    {
+        "ID": "M1052",
+        "STIX ID": "course-of-action--2c2ad92a-d710-41ab-a996-1db143bb4808",
+        "name": "User Account Control",
+        "description": "Configure Windows User Account Control to mitigate risk of adversaries obtaining elevated process access.",
+        "url": "https://attack.mitre.org/mitigations/M1052",
+        "created": "11 June 2019",
+        "last modified": "31 March 2020",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: GitHub IAD Secure Host Baseline UAC Filtering),(Citation: Executable Installers are Vulnerable)"
+    },
+    {
+        "ID": "M1018",
+        "STIX ID": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+        "name": "User Account Management",
+        "description": "Manage the creation, modification, use, and permissions associated to user accounts.",
+        "url": "https://attack.mitre.org/mitigations/M1018",
+        "created": "06 June 2019",
+        "last modified": "20 May 2020",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: Amazon S3 Security, 2019),(Citation: NSA and ASD Detect and Prevent Web Shells 2020),(Citation: Microsoft SolarWinds Customer Guidance),(Citation: Cisco IOS Software Integrity Assurance - AAA),(Citation: Microsoft GPO Security Filtering),(Citation: Office 365 Partner Relationships),(Citation: Kubernetes RBAC),(Citation: MDMProfileConfigMacOS),(Citation: Mandiant M-Trends 2020),(Citation: Wald0 Guide to GPOs),(Citation: UCF STIG Symbolic Links),(Citation: Symantec BITS May 2007),(Citation: Apple TN2459 Kernel Extensions),(Citation: Microsoft ETW May 2018),(Citation: Crowdstrike AWS User Federation Persistence),(Citation: Microsoft WMI Filters),(Citation: Microsoft Azure Storage Security, 2019),(Citation: Expel IO Evil in AWS),(Citation: Kubernetes Hardening Guide),(Citation: Amazon  AWS Temporary Security Credentials)"
+    },
+    {
+        "ID": "M1017",
+        "STIX ID": "course-of-action--2a4f6c11-a4a7-4cb9-b0ef-6ae1bb3a718a",
+        "name": "User Training",
+        "description": "Train users to be aware of access or manipulation attempts by an adversary to reduce the risk of successful spearphishing, social engineering, and other techniques that involve user interaction.",
+        "url": "https://attack.mitre.org/mitigations/M1017",
+        "created": "06 June 2019",
+        "last modified": "17 October 2024",
+        "domain": "enterprise-attack",
+        "version": 1.2,
+        "relationship citations": "(Citation: CISA Phishing),(Citation: SWAT-hospital),(Citation: Cyber Safety Review Board: Lapsus),(Citation: Re-Open windows on Mac)"
+    },
+    {
+        "ID": "M1016",
+        "STIX ID": "course-of-action--15437c6d-b998-4a36-be41-4ace3d54d266",
+        "name": "Vulnerability Scanning",
+        "description": "Vulnerability scanning is used to find potentially exploitable software vulnerabilities to remediate them.",
+        "url": "https://attack.mitre.org/mitigations/M1016",
+        "created": "06 June 2019",
+        "last modified": "14 July 2020",
+        "domain": "enterprise-attack",
+        "version": 1.1,
+        "relationship citations": "(Citation: OWASP Top 10)"
+    }
+]
