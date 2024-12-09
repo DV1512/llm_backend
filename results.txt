@@ -1,0 +1,52 @@
+# "Hello I would like to do threatmodelling on a web page that is connected to an LLM, using a chatwindow to answer user questions."
+
+Based on the user's input, I will perform a threat modeling analysis for the web page connected to an LLM (Large Language Model) using a chat window. Given that you have provided some extra data about account use policies and mitigations related to auditing and exploit protection from Mitre Atlas, here is my top 10 threats list with corresponding mitigation strategies:
+
+    Insufficient Authentication:
+    An attacker could bypass authentication mechanisms or steal user credentials.
+    Mitigation Strategy (M1036): Implement Account Use Policies for login attempt lockouts and specific login times to prevent brute-force attacks.
+
+    Data Tampering:
+    A malicious actor might alter data stored on the web page, compromising its integrity.
+    Mitigation Strategy: Regularly audit system permissions and configurations using M1047 Audit capabilities.
+
+    Cross-Site Scripting (XSS):
+    An attacker could inject malicious code into user input fields or other areas not properly sanitized.
+    Mitigation Strategy: Use input validation and output encoding practices.
+
+    SQL Injection:
+    A hacker might exploit vulnerabilities in database queries, allowing them access to sensitive data.
+    Mitigation Strategy: Validate input parameters, escape user data in queries, and use parameterized query mechanisms.
+
+    Denial-of-Service (DoS):
+    An attacker could flood a server with traffic until it becomes overwhelmed.
+    Mitigation Strategy: Use rate limiting and traffic filtering.
+
+    Session Hijacking:
+    A malicious actor might intercept user session IDs, gaining access without credentials.
+    Mitigation Strategy: Employ secure session management and encryption.
+
+    Cross-Site Request Forgery (CSRF):
+    An attacker could trick a victim into performing unintended actions.
+    Mitigation Strategy: Use CSRF tokens for form submissions.
+
+    Information Disclosure:
+    A hacker might access sensitive information, including user data and internal communications.
+    Mitigation Strategy: Limit exposure of sensitive data and use encryption.
+
+    Remote File Inclusion (RFI):
+    An attacker could inject malicious code via weak file inclusion mechanisms.
+    Mitigation Strategy: Validate file paths and restrict input.
+
+    Local File Inclusion (LFI):
+    Similar to RFI but targeting local files.
+    Mitigation Strategy: Restrict local file access and validate inputs.
+
+To mitigate these threats:
+
+    Implement Account Use Policies (M1036) for login attempt lockouts and specific login times.
+    Regularly audit system permissions using M1047 Audit capabilities.
+    Protect against SQL Injection by validating input parameters, escaping user data, and using parameterized queries (M1050).
+    Regularly update and patch your system, including web server software, operating systems, and plugins.
+
+By following these guidelines, you can significantly reduce the risk of various types of attacks on your website.
