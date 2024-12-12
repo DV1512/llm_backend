@@ -66,8 +66,6 @@ async fn embeddings(
     let embeddings_result = state.embedding_model.embed_batch(inputs).await;
     match embeddings_result {
         Ok(embeddings) => {
-            let embedding_vecs: Vec<Vec<f32>> = embeddings.iter().map(|emb| emb.to_vec()).collect();
-
             let embeddings: Vec<Embedding> = req
                 .entries
                 .iter()
@@ -93,7 +91,7 @@ async fn embeddings(
                 return Err(ErrorInternalServerError(err.to_string()));
             }
 
-            Ok(HttpResponse::Ok().json(embedding_vecs))
+            Ok(HttpResponse::Created())
         }
         Err(err) => Err(ErrorInternalServerError(err.to_string())),
     }
