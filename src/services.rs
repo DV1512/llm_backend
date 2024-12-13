@@ -1,6 +1,6 @@
 use crate::models::{ChatMessageChunk, ChatRole};
 use crate::rapport::Rapport;
-use crate::state::AppState;
+use crate::state::{AppState, MITRE_MITIGATIONS};
 use actix_web::{web, HttpResponse};
 use actix_web_lab::__reexports::futures_util::stream::BoxStream;
 use actix_web_lab::__reexports::futures_util::StreamExt;
@@ -29,12 +29,8 @@ pub fn keywords(app_state: web::Data<AppState>, prompt: &str) -> String {
         ("encryption", vec!["M1041", "M1051", "M1029"]),
     ]);
 
-    let mitigations = app_state
-        .get_data("mitre_mitigations")
-        .cloned()
-        .unwrap_or_default();
     let mitigations: Vec<Value> =
-        serde_json::from_str(&mitigations).expect("Failed to parse mitigations JSON");
+        serde_json::from_str(MITRE_MITIGATIONS).expect("Failed to parse mitigations JSON");
 
     let lowercase_prompt = prompt.to_lowercase().replace(".", "").replace(",", "");
 
@@ -75,7 +71,7 @@ pub fn keywords(app_state: web::Data<AppState>, prompt: &str) -> String {
 
     let formatted_mitigations_str = formatted_mitigations.join("\n");
     println!("{}", formatted_mitigations_str);
-    return formatted_mitigations_str;
+    formatted_mitigations_str
 }
 
 pub fn chat(
@@ -86,8 +82,7 @@ pub fn chat(
 
     let analysis_prompt = format!(
         "You are a cybersecurity assistant. Your task is to analyze the user's input and determine the required action. 
-        If the user is asking about threat modeling, respond with a question: \'Would you like to perform a threat modeling analysis for a specific connection, or an overall analysis of the system?' \
-        If the user answers the question of complete analysis or component analysis, then analyze the connections provided and provide top 10 threats and mitigations.
+        Anlyze the user input, and give threats and mitigations, the amount dependent on if the user gives an amount, otherwise use a sutiable amount.
         Reference Mitre Atlas if needed.
         User input: {}. ", prompt,
     );

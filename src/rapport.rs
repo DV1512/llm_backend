@@ -18,5 +18,4 @@ pub struct RapportItem {
 pub struct Mitigation {
     name: String,
     description: String,
-    url: String,
 }

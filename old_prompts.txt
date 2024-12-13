@@ -1,0 +1,9 @@
+You are a cybersecurity assistant. Your task is to analyze the user's input and determine the required action. 
+        If the user is asking about threat modeling, respond with a question: \'Would you like to perform a threat modeling analysis for a specific connection, or an overall analysis of the system?' \
+        If the user answers the question of complete analysis or component analysis, then analyze the connections provided and provide top 10 threats and mitigations.
+        Reference Mitre Atlas if needed.
+        User input: {}.
+
+
+curl localhost:8000/chat/completions -d '{"type":"structured","data":"Hello I would like to do threatmodelling on a web page that is connected to an LLM, using a chat window to answer user question Give me 4 threats and mitigations."}' -H 'Content-Type: applications/json'
+curl localhost:8000/chat/completions -d '{"type":"chat","prompt":"Hello I would like to do threatmodelling on a web page that is connected to an LLM, using a chat window to answer user question Give me 4 threats and mitigations."}' -H 'Content-Type: applications/json'
