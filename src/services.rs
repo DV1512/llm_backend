@@ -1,6 +1,6 @@
 use crate::models::{ChatMessageChunk, ChatRole};
 use crate::rapport::Rapport;
-use crate::state::{AppState, MITRE_MITIGATIONS};
+use crate::state::{AppState, MITRE_MITIGATIONS_JSON};
 use actix_web::{web, HttpResponse};
 use actix_web_lab::__reexports::futures_util::stream::BoxStream;
 use actix_web_lab::__reexports::futures_util::StreamExt;
@@ -14,6 +14,7 @@ use std::convert::Infallible;
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use ulid::Ulid;
+use crate::dto::{Keywords, ToMitigations};
 
 pub fn keywords(prompt: &str) -> String {
     let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
@@ -30,7 +31,7 @@ pub fn keywords(prompt: &str) -> String {
     ]);
 
     let mitigations: Vec<Value> =
-        serde_json::from_str(MITRE_MITIGATIONS).expect("Failed to parse mitigations JSON");
+        serde_json::from_str(MITRE_MITIGATIONS_JSON).expect("Failed to parse mitigations JSON");
 
     let lowercase_prompt = prompt.to_lowercase().replace(".", "").replace(",", "");
 
@@ -84,7 +85,7 @@ pub fn chat(
         "You are a cybersecurity assistant. Your task is to analyze the user's input and determine the required action. 
         Anlyze the user input, and give threats and mitigations, the amount dependent on if the user gives an amount, otherwise use a sutiable amount.
         Reference Mitre Atlas if needed.
-        User input: {}. ", prompt,
+        User input: {}. ", prompt
     );
 
     let stream = chat.add_message(analysis_prompt);
@@ -108,22 +109,26 @@ pub fn chat(
     sse::Sse::from_stream(sse_stream)
 }
 
-pub async fn structured(prompt: String, model: Arc<Llama>) -> HttpResponse {
-    //let key_words = keywords(app_state.clone(), &prompt);
+pub async fn structured(prompt: String, keywords: Vec<Keywords>, model: Arc<Llama>) -> HttpResponse {
+    let relevant = keywords.to_mitigations();
 
-    let final_prompt = format!("User input: {}. ", prompt);
+    dbg!(relevant.len());
+
+    let final_prompt = format!("{}.", prompt);
 
     let task = Task::builder_for::<Rapport>(
-        " You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to user requested amount of identified threats, each with a clear description and actionable mitigations. Structure your response in the following format:
+        format!("You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to user requested amount of identified threats, each with a clear description and actionable mitigations. Reference data to take reference from when making the rapport: {}
+         Structure your response in the following format:
     Threat Name(s): [Threat name]
     Description: [Detailed description of the threat]
-    Mitigation(s): [Mitigation]
-    Reporting: After finalizing your report, make sure to place them in the right order."
+    Mitigation(s): [Mitigation]", relevant.format_mitigations() )
     )
     .build();
 
     let res = task.run(final_prompt.to_string(), &*model);
     let text = res.text().await;
+
+    println!("{text}");
 
     let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
         serde_json::json!({

@@ -3,6 +3,7 @@ use crate::responders::EitherResponder;
 use crate::services;
 use crate::state::AppState;
 use actix_web::{post, web};
+use crate::services::keywords;
 
 #[post("/completions")]
 pub async fn completions(
@@ -10,9 +11,9 @@ pub async fn completions(
     state: web::Data<AppState>,
 ) -> EitherResponder {
     match request {
-        Request::Structured { data } => {
+        Request::Structured { prompt, keywords } => {
             let model = state.model.clone();
-            let response = services::structured(data, model).await;
+            let response = services::structured(prompt, keywords, model).await;
             EitherResponder::HttpResponse(response)
         }
         Request::Chat { prompt } => {
