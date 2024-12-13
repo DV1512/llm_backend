@@ -13,7 +13,6 @@ use std::collections::HashMap;
 use std::convert::Infallible;
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
-use tracing_subscriber::fmt::format;
 use ulid::Ulid;
 
 pub fn keywords(app_state: web::Data<AppState>, prompt: &str) -> String {
