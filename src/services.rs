@@ -15,7 +15,7 @@ use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use ulid::Ulid;
 
-pub fn keywords(app_state: web::Data<AppState>, prompt: &str) -> String {
+pub fn keywords(prompt: &str) -> String {
     let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
         ("website", vec!["M1036", "M1048", "M1057"]),
         ("web", vec!["M1036", "M1047", "M1050"]),
