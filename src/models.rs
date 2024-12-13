@@ -1,7 +1,7 @@
-use ulid::Ulid;
-use serde_json::Value;
-use serde::Serialize;
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use ulid::Ulid;
 
 #[derive(Serialize)]
 #[allow(dead_code)]
@@ -41,4 +41,27 @@ impl ChatMessageChunk {
 
         Self::new(id, timestamp, role, value)
     }
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub struct Entry {
+    pub mitre_id: String,
+    pub mitre_name: String,
+    pub mitre_description: String,
+    pub mitre_url: String,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum EntryType {
+    Threat,
+    Mitigation,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Embedding {
+    #[serde(flatten)]
+    pub entry: Entry,
+
+    pub embedding: Vec<f32>,
 }

@@ -1,18 +1,25 @@
-use std::sync::Arc;
-use kalosm::language::{Chat, Llama, Parse, Task};
-use actix_web::HttpResponse;
-use serde_json::Value;
-use ulid::Ulid;
-use std::time::{SystemTime, UNIX_EPOCH};
-use actix_web_lab::sse::{Event, Sse};
-use actix_web_lab::__reexports::futures_util::stream::BoxStream;
-use std::convert::Infallible;
-use actix_web_lab::sse;
-use actix_web_lab::__reexports::futures_util::StreamExt;
-use crate::models::{ChatMessageChunk, ChatRole};
+use crate::dto::SearchEmbeddingsRequest;
+use crate::models::{ChatMessageChunk, ChatRole, Entry};
 use crate::rapport::Rapport;
+use actix_web::error::ErrorInternalServerError;
+use actix_web::HttpResponse;
+use actix_web_lab::__reexports::futures_util::stream::BoxStream;
+use actix_web_lab::__reexports::futures_util::StreamExt;
+use actix_web_lab::sse;
+use actix_web_lab::sse::{Event, Sse};
+use kalosm::language::{Bert, Chat, Embedder, Llama, Parse, Task};
+use serde_json::Value;
+use std::convert::Infallible;
+use std::sync::Arc;
+use std::time::{SystemTime, UNIX_EPOCH};
+use ulid::Ulid;
 
-pub fn chat(prompt: String, model: Arc<Llama>) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
+const MAIN_BACKEND_SEARCH_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings/search";
+
+pub fn chat(
+    prompt: String,
+    model: Arc<Llama>,
+) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
     let mut chat = Chat::builder((*model).clone()).build();
     let stream = chat.add_message(prompt);
 
@@ -74,4 +81,38 @@ pub async fn structured(prompt: String, model: Arc<Llama>) -> HttpResponse {
     );
 
     HttpResponse::Ok().json(chunk)
+}
+
+pub async fn compute_single_embedding(
+    query: String,
+    model: Arc<Bert>,
+) -> Result<Vec<f32>, actix_web::Error> {
+    match model.embed_string(query).await {
+        Ok(embedding) => Ok(embedding.to_vec()),
+        Err(err) => Err(ErrorInternalServerError(err)),
+    }
+}
+
+pub async fn find_closest_embeddings(
+    search_request: SearchEmbeddingsRequest,
+) -> Result<Vec<Entry>, actix_web::Error> {
+    let client = reqwest::Client::new();
+    let Ok(res) = client
+        .post(MAIN_BACKEND_SEARCH_EMBEDDINGS_URL)
+        .json(&search_request)
+        .send()
+        .await
+    else {
+        return Err(ErrorInternalServerError(
+            "Error connecting to main backend".to_string(),
+        ));
+    };
+
+    let Ok(res_body) = res.json::<Vec<Entry>>().await else {
+        return Err(ErrorInternalServerError(
+            "Error reading body from request to main backend".to_string(),
+        ));
+    };
+
+    Ok(res_body)
 }
