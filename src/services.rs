@@ -1,3 +1,4 @@
+use crate::dto::{Keywords, ToMitigations};
 use crate::models::{ChatMessageChunk, ChatRole};
 use crate::rapport::Rapport;
 use crate::state::{AppState, MITRE_MITIGATIONS_JSON};
@@ -14,7 +15,6 @@ use std::convert::Infallible;
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use ulid::Ulid;
-use crate::dto::{Keywords, ToMitigations};
 
 pub fn keywords(prompt: &str) -> String {
     let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
@@ -109,7 +109,11 @@ pub fn chat(
     sse::Sse::from_stream(sse_stream)
 }
 
-pub async fn structured(prompt: String, keywords: Vec<Keywords>, model: Arc<Llama>) -> HttpResponse {
+pub async fn structured(
+    prompt: String,
+    keywords: Vec<Keywords>,
+    model: Arc<Llama>,
+) -> HttpResponse {
     let relevant = keywords.to_mitigations();
 
     dbg!(relevant.len());

@@ -1,9 +1,9 @@
 use crate::dto::Request;
 use crate::responders::EitherResponder;
 use crate::services;
+use crate::services::keywords;
 use crate::state::AppState;
 use actix_web::{post, web};
-use crate::services::keywords;
 
 #[post("/completions")]
 pub async fn completions(

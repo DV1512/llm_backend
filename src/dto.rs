@@ -1,8 +1,8 @@
-use serde::{Deserialize, Serialize};
-use serde::de::Error;
-use serde_json::Value;
 use crate::models::{MitreMitigation, MitreMitigations};
 use crate::state::{MITRE_MITIGATIONS, MITRE_MITIGATIONS_JSON};
+use serde::de::Error;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Serialize, Deserialize)]
 pub enum Keywords {
@@ -15,7 +15,7 @@ pub enum Keywords {
     Network,
     Authentication,
     Permissions,
-    Encryption
+    Encryption,
 }
 
 impl Keywords {
@@ -41,17 +41,27 @@ pub trait ToMitigations {
 
 impl ToMitigations for Vec<Keywords> {
     fn to_mitigations(self) -> MitreMitigations {
-        let mut ids = self.iter().map(Keywords::mitigation_ids).collect::<Vec<Vec<_>>>();
+        if self.is_empty() {
+            return MitreMitigations(vec![]);
+        }
+        let mut ids = self
+            .iter()
+            .map(Keywords::mitigation_ids)
+            .collect::<Vec<Vec<_>>>();
 
         ids.sort();
         ids.dedup();
 
         let ids = ids.iter().flatten().collect::<Vec<&String>>();
 
-        let mitigations = MITRE_MITIGATIONS.iter().filter(|mitre_mitigation| {
-            let id = &mitre_mitigation.id;
-            ids.contains(&id)
-        }).cloned().collect();
+        let mitigations = MITRE_MITIGATIONS
+            .iter()
+            .filter(|mitre_mitigation| {
+                let id = &mitre_mitigation.id;
+                ids.contains(&id)
+            })
+            .cloned()
+            .collect();
 
         MitreMitigations(mitigations)
     }
@@ -60,6 +70,12 @@ impl ToMitigations for Vec<Keywords> {
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Request {
-    Structured { prompt: String, keywords: Vec<Keywords> },
-    Chat { prompt: String },
+    Structured {
+        prompt: String,
+        #[serde(default)]
+        keywords: Vec<Keywords>,
+    },
+    Chat {
+        prompt: String,
+    },
 }

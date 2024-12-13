@@ -1,8 +1,8 @@
 use crate::error::ServerError;
-use kalosm::language::*;
-use std::sync::Arc;
-use once_cell::sync::Lazy;
 use crate::models::{MitreMitigation, MitreMitigations};
+use kalosm::language::*;
+use once_cell::sync::Lazy;
+use std::sync::Arc;
 
 pub const MITRE_MITIGATIONS_JSON: &str = include_str!("../filter_mitigations.json");
 pub static MITRE_MITIGATIONS: Lazy<Arc<MitreMitigations>> = Lazy::new(|| {
