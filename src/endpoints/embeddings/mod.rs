@@ -2,8 +2,11 @@ use crate::state::AppState;
 use actix_web::{
     dev::HttpServiceFactory, error::ErrorInternalServerError, post, web, HttpResponse, Responder,
 };
-use kalosm::language::EmbedderExt;
+use kalosm::language::{Embedder, EmbedderExt};
 use serde::{Deserialize, Serialize};
+
+const MAIN_BACKEND_ADD_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings";
+const MAIN_BACKEND_SEARCH_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings/search";
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Entry {
@@ -34,6 +37,7 @@ impl From<EntryType> for String {
 struct EmbeddingsRequest {
     #[serde(rename = "type")]
     entry_type: EntryType,
+
     entries: Vec<Entry>,
 }
 
@@ -52,8 +56,26 @@ struct EmbeddingsResponse {
     entries: Vec<Embedding>,
 }
 
+#[derive(Serialize, Deserialize)]
+struct EmbeddingQuery {
+    #[serde(rename = "type")]
+    entry_type: EntryType,
+
+    query: String,
+    num_neighbors: u32,
+}
+
+#[derive(Serialize, Deserialize)]
+struct SearchEmbeddingsRequest {
+    #[serde(rename = "type")]
+    entry_type: EntryType,
+
+    embedding: Vec<f32>,
+    num_neighbors: u32,
+}
+
 #[post("")]
-async fn embeddings(
+async fn add_embeddings(
     web::Json(req): web::Json<EmbeddingsRequest>,
     state: web::Data<AppState>,
 ) -> Result<impl Responder, actix_web::Error> {
@@ -83,7 +105,7 @@ async fn embeddings(
 
             let client = reqwest::Client::new();
             if let Err(err) = client
-                .post("http://localhost:9999/api/v1/embeddings")
+                .post(MAIN_BACKEND_ADD_EMBEDDINGS_URL)
                 .json(&request_body)
                 .send()
                 .await
@@ -97,6 +119,46 @@ async fn embeddings(
     }
 }
 
+#[post("/search")]
+async fn search_embeddings(
+    web::Json(req): web::Json<EmbeddingQuery>,
+    state: web::Data<AppState>,
+) -> Result<impl Responder, actix_web::Error> {
+    let Ok(embedding) = state.embedding_model.embed_string(req.query).await else {
+        return Err(ErrorInternalServerError(
+            "Error computing query embedding".to_string(),
+        ));
+    };
+    let embedding_vec = embedding.to_vec();
+
+    let client = reqwest::Client::new();
+    let req_body = SearchEmbeddingsRequest {
+        entry_type: req.entry_type,
+        embedding: embedding_vec,
+        num_neighbors: req.num_neighbors,
+    };
+    let Ok(res) = client
+        .post(MAIN_BACKEND_SEARCH_EMBEDDINGS_URL)
+        .json(&req_body)
+        .send()
+        .await
+    else {
+        return Err(ErrorInternalServerError(
+            "Error connecting to main backend".to_string(),
+        ));
+    };
+
+    let Ok(res_body) = res.text().await else {
+        return Err(ErrorInternalServerError(
+            "Error reading body from request to main backend".to_string(),
+        ));
+    };
+
+    Ok(HttpResponse::Ok().body(res_body))
+}
+
 pub fn embeddings_service() -> impl HttpServiceFactory {
-    web::scope("/embeddings").service(embeddings)
+    web::scope("/embeddings")
+        .service(add_embeddings)
+        .service(search_embeddings)
 }
