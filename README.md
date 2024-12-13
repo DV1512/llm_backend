@@ -27,24 +27,6 @@ http://localhost:8000/chat/completions
 }
 
 
-[profile.release]
-lto = true
-codegen-units = 1
 
-
-# Test run code
-
-curl localhost:8000/chat/completions -d '{"type":"structured","data":"I have a web application which is connected to a backend."}' -H "Content-Type: applications/json"
-curl localhost:8000/chat/completions -d '{"type":"chat","prompt":"I have a web applciation which is connected to a beackend."}' -H "Content-Type: applications/json"
-
-
-# new test string
-curl localhost:8000/chat/completions -d '{"type":"structured","data":"I have the following components: A web interface, A llm, database. The web interface is connected to the LLM, the LLM has access to user data on the database. Do threat moddeling on this and give me 10 threats and mitigations."}' -H "Content-Type: applications/json"
-
-
-# Chat testing prompted responses and threat modelling
-# Start up LLM
-# Run the below in a terminal
-curl localhost:8000/chat/completions -d '{"type":"chat","prompt":"Hello I would like to do threatmodelling on a web page that is connected to an LLM, using a chatwindow to answer user questions."}' -H "Content-Type: applications/json"
-
-curl localhost:8000/chat/completions -d '{"type":"chat","prompt":"I would like to do an overall analysis."}' -H "Content-Type: applications/json"
+# This test curl works for me:
+curl localhost:8000/chat/completions -d '{"type":"structured","data":"Hello I would like to do threatmodelling on a web page that is connected to an LLM, using a chat window to answer user question Give me 5 threats and mitigations."}' -H "Content-Type: applications/json"

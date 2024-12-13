@@ -85,7 +85,6 @@ pub fn chat(
 ) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
     let mut chat = Chat::builder((*model).clone()).build();
     let formatted_mitigations_str = keywords(app_state, &prompt);
-    println!("{}", formatted_mitigations_str);
 
     let analysis_prompt = format!(
         "You are a cybersecurity assistant. Your task is to analyze the user's input and determine the required action. 
@@ -116,23 +115,17 @@ pub fn chat(
     sse::Sse::from_stream(sse_stream)
 }
 
-pub async fn structured(
-    prompt: String,
-    app_state: web::Data<AppState>,
-    model: Arc<Llama>,
-) -> HttpResponse {
-    let key_words = keywords(app_state.clone(), &prompt);
+pub async fn structured(prompt: String, app_state: web::Data<AppState>) -> HttpResponse {
+    //let key_words = keywords(app_state.clone(), &prompt);
 
-    let final_prompt = format!("User input: {}. Extra Data: {}", prompt, key_words);
-    println!("{}", serde_json::to_string_pretty(&final_prompt).unwrap());
+    let final_prompt = format!("User input: {}. ", prompt);
 
     let task = Task::builder_for::<Rapport>(
-        " You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to 10 identified threats, each with a clear description and actionable mitigations. Structure your response in the following format:
-    Threat Name
+        " You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to user requested amount of identified threats, each with a clear description and actionable mitigations. Structure your response in the following format:
+    Threat Name(s): [Threat name]
     Description: [Detailed description of the threat]
-    Mitigation(s):
-        [Actionable step 1]
-        [Actionable step 2 (if applicable)]"
+    Mitigation(s): [Mitigation]
+    Reporting: After finalizing your report, make sure to place them in the right order."
     )
     .build();
 
