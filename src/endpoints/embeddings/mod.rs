@@ -70,10 +70,10 @@ struct EmbeddingQuery {
 #[derive(Serialize, Deserialize)]
 pub struct SearchEmbeddingsRequest {
     #[serde(rename = "type")]
-    entry_type: EntryType,
+    pub entry_type: EntryType,
 
-    embedding: Vec<f32>,
-    num_neighbors: u32,
+    pub embedding: Vec<f32>,
+    pub num_neighbors: u32,
 }
 
 #[post("")]
