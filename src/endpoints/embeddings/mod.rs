@@ -1,8 +1,10 @@
-use crate::state::AppState;
+use std::sync::Arc;
+
+use crate::{error::ServerError, state::AppState};
 use actix_web::{
     dev::HttpServiceFactory, error::ErrorInternalServerError, post, web, HttpResponse, Responder,
 };
-use kalosm::language::{Embedder, EmbedderExt};
+use kalosm::language::{Bert, Embedder, EmbedderExt};
 use serde::{Deserialize, Serialize};
 
 const MAIN_BACKEND_ADD_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings";
@@ -66,7 +68,7 @@ struct EmbeddingQuery {
 }
 
 #[derive(Serialize, Deserialize)]
-struct SearchEmbeddingsRequest {
+pub struct SearchEmbeddingsRequest {
     #[serde(rename = "type")]
     entry_type: EntryType,
 
@@ -119,27 +121,23 @@ async fn add_embeddings(
     }
 }
 
-#[post("/search")]
-async fn search_embeddings(
-    web::Json(req): web::Json<EmbeddingQuery>,
-    state: web::Data<AppState>,
-) -> Result<impl Responder, actix_web::Error> {
-    let Ok(embedding) = state.embedding_model.embed_string(req.query).await else {
-        return Err(ErrorInternalServerError(
-            "Error computing query embedding".to_string(),
-        ));
-    };
-    let embedding_vec = embedding.to_vec();
+pub async fn compute_single_embedding(
+    query: String,
+    model: Arc<Bert>,
+) -> Result<Vec<f32>, actix_web::Error> {
+    match model.embed_string(query).await {
+        Ok(embedding) => Ok(embedding.to_vec()),
+        Err(err) => Err(ErrorInternalServerError(err)),
+    }
+}
 
+pub async fn find_closest_embeddings(
+    search_request: SearchEmbeddingsRequest,
+) -> Result<Vec<Entry>, actix_web::Error> {
     let client = reqwest::Client::new();
-    let req_body = SearchEmbeddingsRequest {
-        entry_type: req.entry_type,
-        embedding: embedding_vec,
-        num_neighbors: req.num_neighbors,
-    };
     let Ok(res) = client
         .post(MAIN_BACKEND_SEARCH_EMBEDDINGS_URL)
-        .json(&req_body)
+        .json(&search_request)
         .send()
         .await
     else {
@@ -148,13 +146,29 @@ async fn search_embeddings(
         ));
     };
 
-    let Ok(res_body) = res.text().await else {
+    let Ok(res_body) = res.json::<Vec<Entry>>().await else {
         return Err(ErrorInternalServerError(
             "Error reading body from request to main backend".to_string(),
         ));
     };
 
-    Ok(HttpResponse::Ok().body(res_body))
+    Ok(res_body)
+}
+
+#[post("/search")]
+async fn search_embeddings(
+    web::Json(req): web::Json<EmbeddingQuery>,
+    state: web::Data<AppState>,
+) -> Result<impl Responder, actix_web::Error> {
+    let embedding_model = state.embedding_model.clone();
+    let embedding = compute_single_embedding(req.query, embedding_model).await?;
+    let neighbors = find_closest_embeddings(SearchEmbeddingsRequest {
+        embedding,
+        num_neighbors: req.num_neighbors,
+        entry_type: req.entry_type,
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(neighbors))
 }
 
 pub fn embeddings_service() -> impl HttpServiceFactory {
