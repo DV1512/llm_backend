@@ -13,13 +13,10 @@ use std::collections::HashMap;
 use std::convert::Infallible;
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
+use tracing_subscriber::fmt::format;
 use ulid::Ulid;
 
-pub fn chat(
-    prompt: String,
-    app_state: web::Data<AppState>,
-    model: Arc<Llama>,
-) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
+pub fn keywords(app_state: web::Data<AppState>, prompt: &str) -> String {
     let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
         ("website", vec!["M1036", "M1048", "M1057"]),
         ("web", vec!["M1036", "M1047", "M1050"]),
@@ -76,8 +73,19 @@ pub fn chat(
             )
         })
         .collect();
-    let mut chat = Chat::builder((*model).clone()).build();
+
     let formatted_mitigations_str = formatted_mitigations.join("\n");
+    println!("{}", formatted_mitigations_str);
+    return formatted_mitigations_str;
+}
+
+pub fn chat(
+    prompt: String,
+    app_state: web::Data<AppState>,
+    model: Arc<Llama>,
+) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
+    let mut chat = Chat::builder((*model).clone()).build();
+    let formatted_mitigations_str = keywords(app_state, &prompt);
     println!("{}", formatted_mitigations_str);
 
     let analysis_prompt = format!(
@@ -114,83 +122,22 @@ pub async fn structured(
     app_state: web::Data<AppState>,
     model: Arc<Llama>,
 ) -> HttpResponse {
-    let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
-        ("website", vec!["M1036", "M1048", "M1057"]),
-        ("web", vec!["M1036", "M1047", "M1050"]),
-        ("database", vec!["M1049", "M1028", "M1032"]),
-        ("backend", vec!["M1015", "M1042", "M1025"]),
-        ("credentials", vec!["M1043", "M1034", "M1033"]),
-        ("security", vec!["M1050", "M1041", "M1038"]),
-        ("network", vec!["M1037", "M1035", "M1030"]),
-        ("authentication", vec!["M1032", "M1018", "M1026"]),
-        ("permissions", vec!["M1024", "M1022", "M1039"]),
-        ("encryption", vec!["M1041", "M1051", "M1029"]),
-    ]);
+    let key_words = keywords(app_state.clone(), &prompt);
 
-    let mitigations = app_state
-        .get_data("mitre_mitigations")
-        .cloned()
-        .unwrap_or_default();
-    let mitigations: Vec<Value> =
-        serde_json::from_str(&mitigations).expect("Failed to parse mitigations JSON");
-
-    let lowercase_prompt = prompt.to_lowercase().replace(".", "").replace(",", "");
-
-    let words_in_prompt: Vec<&str> = lowercase_prompt.split_whitespace().collect();
-
-    let mut relevant_mitigation_ids = Vec::new();
-    for word in words_in_prompt {
-        if let Some(mitigation_ids) = keyword_to_mitigation.get(word) {
-            relevant_mitigation_ids.extend_from_slice(mitigation_ids);
-        }
-    }
-
-    relevant_mitigation_ids.sort();
-    relevant_mitigation_ids.dedup();
-
-    let selected_mitigations: Vec<&Value> = mitigations
-        .iter()
-        .filter(|m| {
-            if let Some(id) = m["ID"].as_str() {
-                relevant_mitigation_ids.contains(&id)
-            } else {
-                false
-            }
-        })
-        .collect();
-
-    let formatted_mitigations: Vec<String> = selected_mitigations
-        .iter()
-        .map(|mitigation| {
-            format!(
-                "-name: {}, description: {}\n  url: {}",
-                mitigation["name"].as_str().unwrap_or("N/A"),
-                mitigation["description"].as_str().unwrap_or("N/A"),
-                mitigation["url"].as_str().unwrap_or("N/A")
-            )
-        })
-        .collect();
-    let final_prompt = json!({
-        "id": Ulid::new().to_string(),
-        "timestamp": SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("Time went backwards?")
-            .as_secs(),
-        "role": "Assistant",
-        "contents": {
-            "summary": "You are a cybersecurity expert. Analyze the following user input for potential vulnerabilities and suggest appropriate mitigations. Use Mitre Atlas as reference. Give 10 Threats that you have found and mitigations for these.",
-            "input": prompt,
-            "extra data": formatted_mitigations,
-        }
-    });
+    let final_prompt = format!("User input: {}. Extra Data: {}", prompt, key_words);
     println!("{}", serde_json::to_string_pretty(&final_prompt).unwrap());
 
     let task = Task::builder_for::<Rapport>(
-        "You threat model a given input and generate a report with top ten vulnerabilities and mitigations."
+        " You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to 10 identified threats, each with a clear description and actionable mitigations. Structure your response in the following format:
+    Threat Name
+    Description: [Detailed description of the threat]
+    Mitigation(s):
+        [Actionable step 1]
+        [Actionable step 2 (if applicable)]"
     )
     .build();
 
-    let res = task.run(final_prompt.to_string(), &*model);
+    let res = task.run(final_prompt.to_string(), &*app_state.model);
     let text = res.text().await;
 
     let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
@@ -211,234 +158,3 @@ pub async fn structured(
 
     HttpResponse::Ok().json(chunk)
 }
-
-/*
-pub async fn structured(
-    prompt: String,
-    app_state: web::Data<AppState>,
-    model: Arc<Llama>,
-) -> HttpResponse {
-    let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
-        ("website", vec!["M1036", "M1048", "M1057"]),
-        ("web", vec!["M1036", "M1047", "M1050"]),
-        ("database", vec!["M1049", "M1028", "M1032"]),
-        ("backend", vec!["M1015", "M1042", "M1025"]),
-        ("credentials", vec!["M1043", "M1034", "M1033"]),
-        ("security", vec!["M1050", "M1041", "M1038"]),
-        ("network", vec!["M1037", "M1035", "M1030"]),
-        ("authentication", vec!["M1032", "M1018", "M1026"]),
-        ("permissions", vec!["M1024", "M1022", "M1039"]),
-        ("encryption", vec!["M1041", "M1051", "M1029"]),
-    ]);
-
-    let mitigations = app_state
-        .get_data("mitre_mitigations")
-        .cloned()
-        .unwrap_or_default();
-    let mitigations: Vec<Value> =
-        serde_json::from_str(&mitigations).expect("Failed to parse mitigations JSON");
-
-    let lowercase_prompt = prompt.to_lowercase().replace(".", "").replace(",", "");
-
-    let words_in_prompt: Vec<&str> = lowercase_prompt.split_whitespace().collect();
-
-    let mut relevant_mitigation_ids = Vec::new();
-    for word in words_in_prompt {
-        if let Some(mitigation_ids) = keyword_to_mitigation.get(word) {
-            relevant_mitigation_ids.extend_from_slice(mitigation_ids);
-        }
-    }
-
-    relevant_mitigation_ids.sort();
-    relevant_mitigation_ids.dedup();
-
-    let selected_mitigations: Vec<&Value> = mitigations
-        .iter()
-        .filter(|m| {
-            if let Some(id) = m["ID"].as_str() {
-                relevant_mitigation_ids.contains(&id)
-            } else {
-                false
-            }
-        })
-        .collect();
-
-    let formatted_mitigations: Vec<String> = selected_mitigations
-        .iter()
-        .map(|mitigation| {
-            format!(
-                "-name: {}, description: {}\n  url: {}",
-                mitigation["name"].as_str().unwrap_or("N/A"),
-                mitigation["description"].as_str().unwrap_or("N/A"),
-                mitigation["url"].as_str().unwrap_or("N/A")
-            )
-        })
-        .collect();
-
-    let final_prompt = format!(
-        r#"
-    You are a cybersecurity expert. Your task is to generate a detailed report analyzing potential vulnerabilities in the provided system and suggesting mitigation strategies.
-
-    User Input: {}
-
-    Instructions:
-    1. Analyze the input to identify the top (3-10) potential vulnerabilities and attack surfaces.
-    2. For each vulnerability:
-    - Assign a unique, descriptive `name`.
-    - Write a clear `description` explaining the vulnerability.
-    - Provide a list of `mitigations` for this vulnerability. Each mitigation must include:
-      - A `name` describing the mitigation (e.g., "Implement Account Lockout Policy").
-      - A `description` explaining how the mitigation addresses the vulnerability.
-      - A `url` for additional information or documentation about the mitigation.
-    3. Ensure that each vulnerability and mitigation is specific, relevant, and complete.
-
-    "#,
-        prompt,
-        //formatted_mitigations.join("\n")
-    );
-    println!("{}", final_prompt);
-
-    // Run the task
-    let task = Task::builder_for::<Rapport>(
-        "You threat model a given input and generate a JSON rapport with vulnerabilities and mitigations."
-    )
-    .build();
-
-    let res = task.run(final_prompt, &*model);
-    let text = res.text().await;
-
-    // Parse the response
-    let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
-        serde_json::json!({
-            "error": "Failed to parse LLM response"
-        })
-    });
-
-    let chunk = ChatMessageChunk::new_serialized(
-        Ulid::new(),
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("Time went backwards?")
-            .as_secs(),
-        ChatRole::Assistant,
-        parsed,
-    );
-
-    HttpResponse::Ok().json(chunk)
-}
-*/
-
-/*
-pub async fn structured(
-    prompt: String,
-    app_state: web::Data<AppState>,
-    model: Arc<Llama>,
-) -> HttpResponse {
-    let keyword_to_mitigation: HashMap<&str, Vec<&str>> = HashMap::from([
-        ("website", vec!["M1036", "M1048", "M1057"]),
-        ("web", vec!["M1036", "M1047", "M1050"]),
-        ("database", vec!["M1049", "M1028", "M1032"]),
-        ("backend", vec!["M1015", "M1042", "M1025"]),
-        ("credentials", vec!["M1043", "M1034", "M1033"]),
-        ("security", vec!["M1050", "M1041", "M1038"]),
-        ("network", vec!["M1037", "M1035", "M1030"]),
-        ("authentication", vec!["M1032", "M1018", "M1026"]),
-        ("permissions", vec!["M1024", "M1022", "M1039"]),
-        ("encryption", vec!["M1041", "M1051", "M1029"]),
-    ]);
-
-    let mitigations = app_state
-        .get_data("mitre_mitigations")
-        .cloned()
-        .unwrap_or_default();
-    let mitigations: Vec<Value> =
-        serde_json::from_str(&mitigations).expect("Failed to parse mitigations JSON");
-
-    let lowercase_prompt = prompt
-        .to_lowercase()
-        .replace(".", "") // Remove periods
-        .replace(",", ""); // Remove commas
-
-    let words_in_prompt: Vec<&str> = lowercase_prompt.split_whitespace().collect();
-    //println!("Combined Keywords: {:?}", words_in_prompt);
-
-    let mut relevant_mitigation_ids: HashSet<&str> = HashSet::new();
-    for word in &words_in_prompt {
-        if let Some(mitigation_ids) = keyword_to_mitigation.get(word) {
-            relevant_mitigation_ids.extend(mitigation_ids);
-        }
-        println!("{}", word);
-    }
-    //println!("Combined Keywords: {:?}", relevant_mitigation_ids);
-
-    let selected_mitigations: Vec<&Value> = mitigations
-        .iter()
-        .filter(|m| {
-            if let Some(id) = m["ID"].as_str() {
-                relevant_mitigation_ids.contains(id)
-            } else {
-                false
-            }
-        })
-        .collect();
-    //println!("Combined Keywords: {:?}", selected_mitigations);
-    let formatted_mitigations: Vec<String> = selected_mitigations
-        .iter()
-        .map(|mitigation| {
-            format!(
-                "- {}: {}\n",
-                mitigation["name"].as_str().unwrap_or("N/A"),
-                mitigation["description"].as_str().unwrap_or("N/A")
-            )
-        })
-        .collect();
-
-    let final_prompt = format!(
-        r#"
-    You are a cybersecurity expert. Your task is to analyze potential vulnerabilities in the provided system and suggesting mitigations.
-
-    **User Input:**
-    {}
-
-    **Instructions:**
-    "1. Identify 10 potential vulnerabilities based on the user input.",
-    "2. For each vulnerability, provide a detailed description and associated mitigations.",
-    "3. Make a Report with each threat and vulnerability and the mitigation associated to the threat.",
-
-
-    **Relevant Data:**
-    {}
-    And your own data.
-    "#,
-        prompt,
-        formatted_mitigations.join("\n")
-    );
-    println!("{}", final_prompt);
-
-    let task = Task::builder_for::<Rapport>(
-        "You threat model a given input and generate a report with top ten vulnerabilities and mitigations."
-    )
-    .build();
-
-    let res = task.run(final_prompt, &*model);
-    let text = res.text().await;
-
-    let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
-        serde_json::json!({
-            "error": "Failed to parse LLM response"
-        })
-    });
-
-    let chunk = ChatMessageChunk::new_serialized(
-        Ulid::new(),
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("Time went backwards?")
-            .as_secs(),
-        ChatRole::Assistant,
-        parsed,
-    );
-
-    HttpResponse::Ok().json(chunk)
-}
-*/
