@@ -12,12 +12,12 @@ pub async fn completions(
     match request {
         Request::Structured { data } => {
             let model = state.model.clone();
-            let response = services::structured(data, state.clone()).await;
+            let response = services::structured(data, model).await;
             EitherResponder::HttpResponse(response)
         }
         Request::Chat { prompt } => {
             let model = state.model.clone();
-            let response = services::chat(prompt, state.clone(), model);
+            let response = services::chat(prompt, model);
             EitherResponder::Sse(response)
         }
     }

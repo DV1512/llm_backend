@@ -80,18 +80,16 @@ pub fn keywords(app_state: web::Data<AppState>, prompt: &str) -> String {
 
 pub fn chat(
     prompt: String,
-    app_state: web::Data<AppState>,
     model: Arc<Llama>,
 ) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
     let mut chat = Chat::builder((*model).clone()).build();
-    let formatted_mitigations_str = keywords(app_state, &prompt);
 
     let analysis_prompt = format!(
         "You are a cybersecurity assistant. Your task is to analyze the user's input and determine the required action. 
         If the user is asking about threat modeling, respond with a question: \'Would you like to perform a threat modeling analysis for a specific connection, or an overall analysis of the system?' \
         If the user answers the question of complete analysis or component analysis, then analyze the connections provided and provide top 10 threats and mitigations.
         Reference Mitre Atlas if needed.
-        User input: {}. Extra data: {}", prompt, formatted_mitigations_str
+        User input: {}. ", prompt,
     );
 
     let stream = chat.add_message(analysis_prompt);
@@ -115,7 +113,7 @@ pub fn chat(
     sse::Sse::from_stream(sse_stream)
 }
 
-pub async fn structured(prompt: String, app_state: web::Data<AppState>) -> HttpResponse {
+pub async fn structured(prompt: String, model: Arc<Llama>) -> HttpResponse {
     //let key_words = keywords(app_state.clone(), &prompt);
 
     let final_prompt = format!("User input: {}. ", prompt);
@@ -129,7 +127,7 @@ pub async fn structured(prompt: String, app_state: web::Data<AppState>) -> HttpR
     )
     .build();
 
-    let res = task.run(final_prompt.to_string(), &*app_state.model);
+    let res = task.run(final_prompt.to_string(), &*model);
     let text = res.text().await;
 
     let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
