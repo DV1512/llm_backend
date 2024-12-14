@@ -9,14 +9,13 @@ pub async fn completions(
     web::Json(request): web::Json<Request>,
     state: web::Data<AppState>,
 ) -> EitherResponder {
+    let model = state.model.clone();
     match request {
         Request::Structured { prompt, keywords } => {
-            let model = state.model.clone();
             let response = services::structured(prompt, keywords, model).await;
             EitherResponder::HttpResponse(response)
         }
         Request::Chat { prompt } => {
-            let model = state.model.clone();
             let response = services::chat(prompt, model);
             EitherResponder::Sse(response)
         }

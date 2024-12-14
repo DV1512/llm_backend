@@ -53,10 +53,7 @@ pub async fn structured(
 ) -> HttpResponse {
     let relevant = keywords.to_mitigations();
 
-    dbg!(relevant.len());
     let formatted_relevant = relevant.format_mitigations();
-
-    let final_prompt = format!("{}.", prompt);
 
     let task = Task::builder_for::<Rapport>(
         format!("You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to user requested amount of identified threats, each with a clear description and actionable mitigations. Reference data to take reference from when making the rapport: {}
@@ -67,7 +64,7 @@ pub async fn structured(
     )
     .build();
 
-    let res = task.run(final_prompt.to_string(), &*model);
+    let res = task.run(prompt, &*model);
     let text = res.text().await;
 
     println!("{text}");
