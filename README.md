@@ -6,20 +6,21 @@ If your machine has CUDA support (NVIDIA GPU) then you can add the "cuda" featur
 
 # Explenation on how to run
 
-*Termnial*
+## Termnial
 
-cargo build --release 
+cargo build --release
+
 cargo run --release
 
-*Curl request*
+## curl request
 
 curl localhost:8000/chat/completions d '{"type":"", "keywords": [], "prompt": "hello"}' -H "Content-Type: applications/json"
 
-*Type*
+## Type
 
 Type is either structured or chat
 
-*keywords*
+## keywords
 
 Can be left out or included.
 
