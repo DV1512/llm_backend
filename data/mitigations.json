@@ -1,0 +1,270 @@
+{
+    "type": "mitigation",
+    "entries": [
+    {
+        "mitre_id": "M1036",
+        "mitre_name": "Account Use Policies",
+        "mitre_description": "Configure features related to account use like login attempt lockouts, specific login times, etc.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1036"
+    },
+    {
+        "mitre_id": "M1015",
+        "mitre_name": "Active Directory Configuration",
+        "mitre_description": "Implement robust Active Directory configurations using group policies to control access and reduce the attack surface. Specific examples include:  * Account Configuration: Use provisioned domain accounts rather than local accounts to leverage centralized control and auditing capabilities. * Interactive Logon Restrictions: Enforce group policies that prohibit interactive logons for accounts that should not directly access systems. * Remote Desktop Settings: Limit Remote Desktop logons to authorized accounts to prevent misuse by adversaries. * Dedicated Administrative Accounts: Create specialized domain-wide accounts that are restricted from interactive logons but can perform specific tasks like installations or repository access. * Authentication Silos: Configure Authentication Silos in Active Directory to create access zones with restrictions based on membership in the Protected Users global security group. This setup enhances security by applying additional protections to high-risk accounts, limiting their exposure to potential attacks.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1015"
+    },
+    {
+        "mitre_id": "M1049",
+        "mitre_name": "Antivirus/Antimalware",
+        "mitre_description": "Use signatures or heuristics to detect malicious software.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1049"
+    },
+    {
+        "mitre_id": "M1013",
+        "mitre_name": "Application Developer Guidance",
+        "mitre_description": "This mitigation describes any guidance or training given to developers of applications to avoid introducing security weaknesses that an adversary may be able to take advantage of.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1013"
+    },
+    {
+        "mitre_id": "M1048",
+        "mitre_name": "Application Isolation and Sandboxing",
+        "mitre_description": "Restrict execution of code to a virtual environment on or in transit to an endpoint system.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1048"
+    },
+    {
+        "mitre_id": "M1047",
+        "mitre_name": "Audit",
+        "mitre_description": "Perform audits or scans of systems, permissions, insecure software, insecure configurations, etc. to identify potential weaknesses.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1047"
+    },
+    {
+        "mitre_id": "M1040",
+        "mitre_name": "Behavior Prevention on Endpoint",
+        "mitre_description": "Use capabilities to prevent suspicious behavior patterns from occurring on endpoint systems. This could include suspicious process, file, API call, etc. behavior.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1040"
+    },
+    {
+        "mitre_id": "M1046",
+        "mitre_name": "Boot Integrity",
+        "mitre_description": "Use secure methods to boot a system and verify the integrity of the operating system and loading mechanisms.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1046"
+    },
+    {
+        "mitre_id": "M1045",
+        "mitre_name": "Code Signing",
+        "mitre_description": "Enforce binary and application integrity with digital signature verification to prevent untrusted code from executing.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1045"
+    },
+    {
+        "mitre_id": "M1043",
+        "mitre_name": "Credential Access Protection",
+        "mitre_description": "Use capabilities to prevent successful credential access by adversaries; including blocking forms of credential dumping.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1043"
+    },
+    {
+        "mitre_id": "M1053",
+        "mitre_name": "Data Backup",
+        "mitre_description": "Take and store data backups from end user systems and critical servers. Ensure backup and storage systems are hardened and kept separate from the corporate network to prevent compromise.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1053"
+    },
+    {
+        "mitre_id": "M1057",
+        "mitre_name": "Data Loss Prevention",
+        "mitre_description": "Use a data loss prevention (DLP) strategy to categorize sensitive data, identify data formats indicative of personal identifiable information (PII), and restrict exfiltration of sensitive data.(Citation: PurpleSec Data Loss Prevention)",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1057"
+    },
+    {
+        "mitre_id": "M1042",
+        "mitre_name": "Disable or Remove Feature or Program",
+        "mitre_description": "Remove or deny access to unnecessary and potentially vulnerable software to prevent abuse by adversaries.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1042"
+    },
+    {
+        "mitre_id": "M1055",
+        "mitre_name": "Do Not Mitigate",
+        "mitre_description": "This category is to associate techniques that mitigation might increase risk of compromise and therefore mitigation is not recommended.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1055"
+    },
+    {
+        "mitre_id": "M1041",
+        "mitre_name": "Encrypt Sensitive Information",
+        "mitre_description": "Protect sensitive information with strong encryption.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1041"
+    },
+    {
+        "mitre_id": "M1039",
+        "mitre_name": "Environment Variable Permissions",
+        "mitre_description": "Prevent modification of environment variables by unauthorized users and groups.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1039"
+    },
+    {
+        "mitre_id": "M1038",
+        "mitre_name": "Execution Prevention",
+        "mitre_description": "Block execution of code on a system through application control, and/or script blocking.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1038"
+    },
+    {
+        "mitre_id": "M1050",
+        "mitre_name": "Exploit Protection",
+        "mitre_description": "Use capabilities to detect and block conditions that may lead to or be indicative of a software exploit occurring.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1050"
+    },
+    {
+        "mitre_id": "M1037",
+        "mitre_name": "Filter Network Traffic",
+        "mitre_description": "Use network appliances to filter ingress or egress traffic and perform protocol-based filtering. Configure software on endpoints to filter network traffic.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1037"
+    },
+    {
+        "mitre_id": "M1035",
+        "mitre_name": "Limit Access to Resource Over Network",
+        "mitre_description": "Prevent access to file shares, remote access to systems, unnecessary services. Mechanisms to limit access may include use of network concentrators, RDP gateways, etc.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1035"
+    },
+    {
+        "mitre_id": "M1034",
+        "mitre_name": "Limit Hardware Installation",
+        "mitre_description": "Block users or groups from installing or using unapproved hardware on systems, including USB devices.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1034"
+    },
+    {
+        "mitre_id": "M1033",
+        "mitre_name": "Limit Software Installation",
+        "mitre_description": "Block users or groups from installing unapproved software.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1033"
+    },
+    {
+        "mitre_id": "M1032",
+        "mitre_name": "Multi-factor Authentication",
+        "mitre_description": "Use two or more pieces of evidence to authenticate to a system; such as username and password in addition to a token from a physical smart card or token generator.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1032"
+    },
+    {
+        "mitre_id": "M1031",
+        "mitre_name": "Network Intrusion Prevention",
+        "mitre_description": "Use intrusion detection signatures to block traffic at network boundaries.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1031"
+    },
+    {
+        "mitre_id": "M1030",
+        "mitre_name": "Network Segmentation",
+        "mitre_description": "Architect sections of the network to isolate critical systems, functions, or resources. Use physical and logical segmentation to prevent access to potentially sensitive systems and information. Use a DMZ to contain any internet-facing services that should not be exposed from the internal network. Configure separate virtual private cloud (VPC) instances to isolate critical cloud systems.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1030"
+    },
+    {
+        "mitre_id": "M1028",
+        "mitre_name": "Operating System Configuration",
+        "mitre_description": "Make configuration changes related to the operating system or a common feature of the operating system that result in system hardening against techniques.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1028"
+    },
+    {
+        "mitre_id": "M1060",
+        "mitre_name": "Out-of-Band Communications Channel",
+        "mitre_description": "Establish secure out-of-band communication channels to ensure the continuity of critical communications during security incidents, data integrity attacks, or in-network communication failures. Out-of-band communication refers to using an alternative, separate communication path that is not dependent on the potentially compromised primary network infrastructure. This method can include secure messaging apps, encrypted phone lines, satellite communications, or dedicated emergency communication systems. Leveraging these alternative channels reduces the risk of adversaries intercepting, disrupting, or tampering with sensitive communications and helps coordinate an effective incident response.(Citation: TrustedSec OOB Communications)(Citation: NIST Special Publication 800-53 Revision 5)",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1060"
+    },
+    {
+        "mitre_id": "M1027",
+        "mitre_name": "Password Policies",
+        "mitre_description": "Set and enforce secure password policies for accounts.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1027"
+    },
+    {
+        "mitre_id": "M1056",
+        "mitre_name": "Pre-compromise",
+        "mitre_description": "This category is used for any applicable mitigation activities that apply to techniques occurring before an adversary gains Initial Access, such as Reconnaissance and Resource Development techniques.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1056"
+    },
+    {
+        "mitre_id": "M1026",
+        "mitre_name": "Privileged Account Management",
+        "mitre_description": "Manage the creation, modification, use, and permissions associated to privileged accounts, including SYSTEM and root.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1026"
+    },
+    {
+        "mitre_id": "M1025",
+        "mitre_name": "Privileged Process Integrity",
+        "mitre_description": "Protect processes with high privileges that can be used to interact with critical system components through use of protected process light, anti-process injection defenses, or other process integrity enforcement measures.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1025"
+    },
+    {
+        "mitre_id": "M1029",
+        "mitre_name": "Remote Data Storage",
+        "mitre_description": "Use remote security log and sensitive file storage where access can be controlled better to prevent exposure of intrusion detection log data or sensitive information.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1029"
+    },
+    {
+        "mitre_id": "M1022",
+        "mitre_name": "Restrict File and Directory Permissions",
+        "mitre_description": "Restrict access by setting directory and file permissions that are not specific to users or privileged accounts.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1022"
+    },
+    {
+        "mitre_id": "M1044",
+        "mitre_name": "Restrict Library Loading",
+        "mitre_description": "Prevent abuse of library loading mechanisms in the operating system and software to load untrusted code by configuring appropriate library loading mechanisms and investigating potential vulnerable software.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1044"
+    },
+    {
+        "mitre_id": "M1024",
+        "mitre_name": "Restrict Registry Permissions",
+        "mitre_description": "Restrict the ability to modify certain hives or keys in the Windows Registry.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1024"
+    },
+    {
+        "mitre_id": "M1021",
+        "mitre_name": "Restrict Web-Based Content",
+        "mitre_description": "Restrict use of certain websites, block downloads/attachments, block Javascript, restrict browser extensions, etc.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1021"
+    },
+    {
+        "mitre_id": "M1020",
+        "mitre_name": "SSL/TLS Inspection",
+        "mitre_description": "Break and inspect SSL/TLS sessions to look at encrypted web traffic for adversary activity.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1020"
+    },
+    {
+        "mitre_id": "M1054",
+        "mitre_name": "Software Configuration",
+        "mitre_description": "Implement configuration changes to software (other than the operating system) to mitigate security risks associated to how the software operates.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1054"
+    },
+    {
+        "mitre_id": "M1019",
+        "mitre_name": "Threat Intelligence Program",
+        "mitre_description": "A threat intelligence program helps an organization generate their own threat intelligence information and track trends to inform defensive priorities to mitigate risk.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1019"
+    },
+    {
+        "mitre_id": "M1051",
+        "mitre_name": "Update Software",
+        "mitre_description": "Perform regular software updates to mitigate exploitation risk.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1051"
+    },
+    {
+        "mitre_id": "M1052",
+        "mitre_name": "User Account Control",
+        "mitre_description": "Configure Windows User Account Control to mitigate risk of adversaries obtaining elevated process access.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1052"
+    },
+    {
+        "mitre_id": "M1018",
+        "mitre_name": "User Account Management",
+        "mitre_description": "Manage the creation, modification, use, and permissions associated to user accounts.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1018"
+    },
+    {
+        "mitre_id": "M1017",
+        "mitre_name": "User Training",
+        "mitre_description": "Train users to be aware of access or manipulation attempts by an adversary to reduce the risk of successful spearphishing, social engineering, and other techniques that involve user interaction.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1017"
+    },
+    {
+        "mitre_id": "M1016",
+        "mitre_name": "Vulnerability Scanning",
+        "mitre_description": "Vulnerability scanning is used to find potentially exploitable software vulnerabilities to remediate them.",
+        "mitre_url": "https://attack.mitre.org/mitigations/M1016"
+    }
+]
+
+}
