@@ -7,6 +7,8 @@ use error::ServerError;
 use logging::init_tracing;
 use tracing_actix_web::TracingLogger;
 
+use dotenv::dotenv;
+
 mod dto;
 mod endpoints;
 mod error;
@@ -20,6 +22,8 @@ mod state;
 #[actix_web::main]
 async fn main() -> Result<(), ServerError> {
     init_tracing()?;
+
+    dotenv().ok();
 
     let state = web::Data::new(AppState::new().await?);
 

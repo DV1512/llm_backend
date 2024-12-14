@@ -14,8 +14,6 @@ use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use ulid::Ulid;
 
-const MAIN_BACKEND_SEARCH_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings/search";
-
 pub fn chat(
     prompt: String,
     model: Arc<Llama>,
@@ -83,6 +81,9 @@ pub async fn structured(prompt: String, model: Arc<Llama>) -> HttpResponse {
     HttpResponse::Ok().json(chunk)
 }
 
+const FALLBACK_MAIN_BACKEND_SEARCH_EMBEDDINGS_URL: &str =
+    "http://localhost:9999/api/v1/embeddings/search";
+
 pub async fn compute_single_embedding(
     query: String,
     model: Arc<Bert>,
@@ -96,9 +97,12 @@ pub async fn compute_single_embedding(
 pub async fn find_closest_embeddings(
     search_request: SearchEmbeddingsRequest,
 ) -> Result<Vec<Entry>, actix_web::Error> {
+    let main_backend_search_embeddings_url = std::env::var("MAIN_BACKEND_SEARCH_EMBEDDINGS_URL")
+        .unwrap_or(FALLBACK_MAIN_BACKEND_SEARCH_EMBEDDINGS_URL.to_string());
+
     let client = reqwest::Client::new();
     let Ok(res) = client
-        .post(MAIN_BACKEND_SEARCH_EMBEDDINGS_URL)
+        .post(main_backend_search_embeddings_url)
         .json(&search_request)
         .send()
         .await

@@ -13,7 +13,7 @@ use actix_web::{
 };
 use kalosm::language::EmbedderExt;
 
-const MAIN_BACKEND_ADD_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings";
+const FALLBACK_MAIN_BACKEND_ADD_EMBEDDINGS_URL: &str = "http://localhost:9999/api/v1/embeddings";
 
 #[post("")]
 pub async fn add_embeddings(
@@ -45,8 +45,12 @@ pub async fn add_embeddings(
             };
 
             let client = reqwest::Client::new();
+
+            let main_backend_add_embeddings_url = std::env::var("MAIN_BACKEND_ADD_EMBEDDINGS_URL")
+                .unwrap_or(FALLBACK_MAIN_BACKEND_ADD_EMBEDDINGS_URL.to_string());
+
             if let Err(err) = client
-                .post(MAIN_BACKEND_ADD_EMBEDDINGS_URL)
+                .post(main_backend_add_embeddings_url)
                 .json(&request_body)
                 .send()
                 .await
