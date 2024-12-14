@@ -1,8 +1,6 @@
-use crate::models::{MitreMitigation, MitreMitigations};
-use crate::state::{MITRE_MITIGATIONS, MITRE_MITIGATIONS_JSON};
-use serde::de::Error;
+use crate::models::MitreMitigations;
+use crate::state::MITRE_MITIGATIONS;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 #[derive(Serialize, Deserialize)]
 pub enum Keywords {
@@ -41,9 +39,6 @@ pub trait ToMitigations {
 
 impl ToMitigations for Vec<Keywords> {
     fn to_mitigations(self) -> MitreMitigations {
-        if self.is_empty() {
-            return MitreMitigations(vec![]);
-        }
         let mut ids = self
             .iter()
             .map(Keywords::mitigation_ids)
