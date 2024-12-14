@@ -1,19 +1,18 @@
-use crate::state::AppState;
-use actix_web::{post, web};
 use crate::dto::Request;
 use crate::responders::EitherResponder;
 use crate::services;
+use crate::state::AppState;
+use actix_web::{post, web};
 
 #[post("/completions")]
 pub async fn completions(
     web::Json(request): web::Json<Request>,
     state: web::Data<AppState>,
 ) -> EitherResponder {
-    let model = state.into_inner().model.clone();
-
+    let model = state.model.clone();
     match request {
-        Request::Structured { data } => {
-            let response = services::structured(data, model).await;
+        Request::Structured { prompt, keywords } => {
+            let response = services::structured(prompt, keywords, model).await;
             EitherResponder::HttpResponse(response)
         }
         Request::Chat { prompt } => {

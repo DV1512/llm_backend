@@ -1,20 +1,31 @@
-use std::sync::Arc;
-use kalosm::language::{Chat, Llama, Parse, Task};
-use actix_web::HttpResponse;
-use serde_json::Value;
-use ulid::Ulid;
-use std::time::{SystemTime, UNIX_EPOCH};
-use actix_web_lab::sse::{Event, Sse};
-use actix_web_lab::__reexports::futures_util::stream::BoxStream;
-use std::convert::Infallible;
-use actix_web_lab::sse;
-use actix_web_lab::__reexports::futures_util::StreamExt;
+use crate::dto::{Keywords, ToMitigations};
 use crate::models::{ChatMessageChunk, ChatRole};
 use crate::rapport::Rapport;
-
-pub fn chat(prompt: String, model: Arc<Llama>) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
+use actix_web::HttpResponse;
+use actix_web_lab::__reexports::futures_util::stream::BoxStream;
+use actix_web_lab::__reexports::futures_util::StreamExt;
+use actix_web_lab::sse;
+use actix_web_lab::sse::{Event, Sse};
+use kalosm::language::{Chat, Llama, Task};
+use serde_json::Value;
+use std::convert::Infallible;
+use std::sync::Arc;
+use std::time::{SystemTime, UNIX_EPOCH};
+use ulid::Ulid;
+pub fn chat(
+    prompt: String,
+    model: Arc<Llama>,
+) -> Sse<BoxStream<'static, Result<Event, Infallible>>> {
     let mut chat = Chat::builder((*model).clone()).build();
-    let stream = chat.add_message(prompt);
+
+    let analysis_prompt = format!(
+        "You are a cybersecurity assistant. Your task is to analyze the user's input and determine the required action. 
+        Anlyze the user input, and give threats and mitigations, the amount dependent on if the user gives an amount, otherwise use a sutiable amount.
+        Reference Mitre Atlas if needed.
+        User input: {}. ", prompt
+    );
+
+    let stream = chat.add_message(analysis_prompt);
 
     let ulid = Ulid::new();
     let timestamp = SystemTime::now()
@@ -35,33 +46,34 @@ pub fn chat(prompt: String, model: Arc<Llama>) -> Sse<BoxStream<'static, Result<
     sse::Sse::from_stream(sse_stream)
 }
 
-pub async fn structured(prompt: String, model: Arc<Llama>) -> HttpResponse {
-    let constraints = Rapport::new_parser();
-    let task = Task::builder("You threat model a given input and generate a JSON rapport with vulnerabilities and mitigations.")
-        .with_constraints(constraints)
-        .build();
-    let format_prompt = r#"""
-    {
-        "summary": string,
-        "items": {
-            "name": string,
-            "description": string,
-            "mitigations: {
-                "name": string,
-                "description": string,
-                "url": url,
-                "citations": string
-            }[]
-            "likelihood": float
-        }[]
-    }
-    """#;
+pub async fn structured(
+    prompt: String,
+    keywords: Vec<Keywords>,
+    model: Arc<Llama>,
+) -> HttpResponse {
+    let relevant = keywords.to_mitigations();
 
-    let final_prompt = format!("{prompt}. \n Answer using this format {format_prompt}...");
-    let res = task.run(final_prompt, &*model);
+    let formatted_relevant = relevant.format_mitigations();
+
+    let task = Task::builder_for::<Rapport>(
+        format!("You are a security threat analyzer. Analyze the following system or scenario and provide a list of up to user requested amount of identified threats, each with a clear description and actionable mitigations. Reference data to take reference from when making the rapport: {}
+         Structure your response in the following format:
+    Threat Name(s): [Threat name]
+    Description: [Detailed description of the threat]
+    Mitigation(s): [Mitigation]", formatted_relevant )
+    )
+    .build();
+
+    let res = task.run(prompt, &*model);
     let text = res.text().await;
 
-    let parsed: Value = serde_json::from_str(&text).unwrap();
+    println!("{text}");
+
+    let parsed: Value = serde_json::from_str(&text).unwrap_or_else(|_| {
+        serde_json::json!({
+            "error": "Failed to parse LLM response"
+        })
+    });
 
     let chunk = ChatMessageChunk::new_serialized(
         Ulid::new(),
