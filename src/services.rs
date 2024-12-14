@@ -54,7 +54,6 @@ pub async fn structured(
     let relevant = keywords.to_mitigations();
 
     dbg!(relevant.len());
-    println!("{:?}", relevant);
     let formatted_relevant = relevant.format_mitigations();
 
     let final_prompt = format!("{}.", prompt);
